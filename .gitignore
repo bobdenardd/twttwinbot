@@ -7,6 +7,46 @@
 *.jar
 *.war
 *.ear
+/target
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+
+target/
+classes/
+overlays/
+*.class
+*.exe
+*.o
+*.so
+published/
+
+# IDE
+# ###################
+*.iml
+*.idl
+*.ipr
+*.iws
+.project
+.classpath
+.settings
+.idea
+.metadata
+nb-configuration.xml
+atlassian-ide-plugin.xml
+rebel.xml
+rebel-remote.xml
+
+# OS generated files
+# ###################
+.DS_Store
+.DS_Store?
+._.DS_Store
+.Spotlight-V100
+.Trashes
+Icon?
+ehthumbs.db
+Thumbs.db
+*~
+*.dat
+
