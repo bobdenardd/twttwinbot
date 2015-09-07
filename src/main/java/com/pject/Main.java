@@ -138,7 +138,7 @@ public class Main {
                         TwitterProxy.follow(twitter, userToFollow, true);
                         users.addFollowed(userToFollow);
                     } else {
-                        LoggerHelper.debug(LOGGER, "User " + usersToFollow + " already followed");
+                        LoggerHelper.debug(LOGGER, "User " + userToFollow + " already followed");
                     }
                 }
             }
