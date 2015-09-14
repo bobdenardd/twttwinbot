@@ -1,1 +1,1 @@
-worker: sh target/bin/main
+worker: sh target/bin/main EMWnjgy9yTXB5XAz2hzz7g Ix8MiX8oCX8mZriQJjlrrTyo4JORrOPFHBO6wcHX1RI 11208232-dAJXfM5cheB4X7M7FSyWt8ptBY50BWWkiFRZmhkfY HOt9YOn7Lno41SmcRmoByCauj2S8agucD6Gnee2UIKQ
