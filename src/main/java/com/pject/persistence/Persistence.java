@@ -26,6 +26,7 @@ public class Persistence {
         Properties properties = new Properties();
         try {
             properties.load(new FileInputStream(new File(TWEETS_FILE)));
+            LOGGER.info("Loaded " + properties.size() + " tweets");
         } catch(Exception e) {
             LOGGER.error("Could not load tweets", e);
         }
@@ -36,6 +37,7 @@ public class Persistence {
         Properties properties = new Properties();
         try {
             properties.load(new FileInputStream(new File(USERS_FILE)));
+            LOGGER.info("Loaded " + properties.size() + " followed users");
         } catch(Exception e) {
             LOGGER.error("Could not load users", e);
         }
