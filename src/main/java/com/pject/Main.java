@@ -37,6 +37,9 @@ public class Main {
     private static Users users;
     private static Tweets tweets;
 
+    private static int retweetNumber = 0;
+    private static int followNumber = 0;
+
     public static void main(String[] args) {
         // Extra shutter for not running during rush hours
         if(Calendar.getInstance().get(Calendar.HOUR_OF_DAY) < 8 || Calendar.getInstance().get(Calendar.HOUR_OF_DAY) > 22) {
@@ -65,6 +68,10 @@ public class Main {
         for (Status status : result) {
             processTweet(status);
         }
+
+        // Quick stats
+        LoggerHelper.info(LOGGER, "Number of retweets: " + retweetNumber);
+        LoggerHelper.info(LOGGER, "Number of follows: " + followNumber);
 
         // Closing the persistence
         LoggerHelper.info(LOGGER, "Persisting tweets and info");
@@ -125,6 +132,7 @@ public class Main {
         try {
             if (TweetAnalyzer.needsRetweet(toConsider.getText())) {
                 LoggerHelper.debug(LOGGER, " -> Needs retweeting");
+                retweetNumber++;
                 TwitterProxy.retweet(twitter, toConsider);
             }
         } catch (Exception e) {
@@ -141,6 +149,7 @@ public class Main {
                 for (String userToFollow : usersToFollow) {
                     LoggerHelper.debug(LOGGER, "Preparing to follow user " + userToFollow);
                     if (!users.isAlreadyFollowed(userToFollow)) {
+                        followNumber++;
                         TwitterProxy.follow(twitter, userToFollow, true);
                         users.addFollowed(userToFollow);
                     } else {
