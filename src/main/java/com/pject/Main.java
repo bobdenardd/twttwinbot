@@ -18,6 +18,7 @@ import twitter4j.TwitterFactory;
 import twitter4j.User;
 import twitter4j.conf.ConfigurationBuilder;
 
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -37,6 +38,11 @@ public class Main {
     private static Tweets tweets;
 
     public static void main(String[] args) {
+        // Extra shutter for not running during rush hours
+        if(Calendar.getInstance().get(Calendar.HOUR_OF_DAY) < 8 || Calendar.getInstance().get(Calendar.HOUR_OF_DAY) > 22) {
+            LoggerHelper.info(LOGGER, "Out of time range, aborting");
+            System.exit(0);
+        }
         // Initializing
         LoggerHelper.info(LOGGER, "Starting the twitter winning bot");
         if(args.length != 4) {
