@@ -22,7 +22,7 @@ public class TweetAnalyzer {
     private static final Logger LOGGER = Logger.getLogger(TweetAnalyzer.class);
 
     private static final Pattern USER_PATTERN = Pattern.compile("@([a-z0-9_]+)");
-    private static final Pattern RT_PATTERN = Pattern.compile("(?i).*(rt|retweet)(\\+| ).*");
+    private static final Pattern RT_PATTERN = Pattern.compile("(?i).*(\\+| )(rt|retweet)(\\+| ).*");
     private static final String SPACE = " ";
 
     public static boolean needsRetweet(String tweet) {
