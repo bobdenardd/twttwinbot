@@ -50,6 +50,7 @@ public class Main {
         LoggerHelper.info(LOGGER, "Starting the twitter winning bot");
         if(args.length != 4) {
             LoggerHelper.error(LOGGER, "Args: consumerKey consumerSecret accessToken accesTokenSecret", null);
+            System.exit(1);
         }
         String consumerKey = args[0];
         String consumerSecret = args[1];
