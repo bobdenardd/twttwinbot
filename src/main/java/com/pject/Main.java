@@ -1,6 +1,7 @@
 package com.pject;
 
 import com.google.common.collect.Lists;
+import com.pject.helper.DropBoxHelper;
 import com.pject.helper.LoggerHelper;
 import com.pject.helper.TweetAnalyzer;
 import com.pject.helper.TwitterProxy;
@@ -48,7 +49,7 @@ public class Main {
         }
         // Initializing
         LoggerHelper.info(LOGGER, "Starting the twitter winning bot");
-        if(args.length != 4) {
+        if(args.length != 5) {
             LoggerHelper.error(LOGGER, "Args: consumerKey consumerSecret accessToken accesTokenSecret", null);
             System.exit(1);
         }
@@ -56,8 +57,9 @@ public class Main {
         String consumerSecret = args[1];
         String accessToken = args[2];
         String accessTokenSecret = args[3];
+        String dropBoxToken = args[4];
         try {
-            init(consumerKey, consumerSecret, accessToken, accessTokenSecret);
+            init(consumerKey, consumerSecret, accessToken, accessTokenSecret, dropBoxToken);
         } catch (Exception e) {
             LoggerHelper.error(LOGGER, "Could not init the twitter proxy", e);
         }
@@ -80,7 +82,7 @@ public class Main {
         Persistence.storeUsers(users);
     }
 
-    private static void init(String consumerKey, String consumerSecret, String accessToken, String accessTokenSecret) throws TwitterException {
+    private static void init(String consumerKey, String consumerSecret, String accessToken, String accessTokenSecret, String dropBoxToken) throws TwitterException {
         // Initializing twitter
         LoggerHelper.info(LOGGER, "Initializing twitter account");
         ConfigurationBuilder cb = new ConfigurationBuilder();
@@ -91,6 +93,9 @@ public class Main {
                 .setOAuthAccessTokenSecret(accessTokenSecret);
         TwitterFactory tf = new TwitterFactory(cb.build());
         twitter = tf.getInstance();
+
+        // Initializing dropbox
+        DropBoxHelper.init(dropBoxToken);
 
         // Initializing persistence
         LoggerHelper.info(LOGGER, "Initializing persistence");

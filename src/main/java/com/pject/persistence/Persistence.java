@@ -1,5 +1,6 @@
 package com.pject.persistence;
 
+import com.pject.helper.DropBoxHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
@@ -19,13 +20,17 @@ public class Persistence {
 
     private static final Logger LOGGER = Logger.getLogger(Persistence.class);
 
+    private static final String REMOTE_ROOT_DBOX = "/twttwinbot";
     private static final String TWEETS_FILE = "tweets.dat";
     private static final String USERS_FILE = "users.dat";
 
     public static Tweets loadTweets() {
         Properties properties = new Properties();
+        File tweetsFile = new File(TWEETS_FILE);
+        tweetsFile.deleteOnExit();
         try {
-            properties.load(new FileInputStream(new File(TWEETS_FILE)));
+            DropBoxHelper.downloadFile(DropBoxHelper.getRemoteFile(REMOTE_ROOT_DBOX, TWEETS_FILE), tweetsFile);
+            properties.load(new FileInputStream(tweetsFile));
             LOGGER.info("Loaded " + properties.size() + " tweets");
         } catch(Exception e) {
             LOGGER.error("Could not load tweets", e);
@@ -35,8 +40,11 @@ public class Persistence {
 
     public static Users loadUsers() {
         Properties properties = new Properties();
+        File usersFile = new File(USERS_FILE);
+        usersFile.deleteOnExit();
         try {
-            properties.load(new FileInputStream(new File(USERS_FILE)));
+            DropBoxHelper.downloadFile(DropBoxHelper.getRemoteFile(REMOTE_ROOT_DBOX, USERS_FILE), usersFile);
+            properties.load(new FileInputStream(usersFile));
             LOGGER.info("Loaded " + properties.size() + " followed users");
         } catch(Exception e) {
             LOGGER.error("Could not load users", e);
@@ -53,8 +61,10 @@ public class Persistence {
     }
 
     public static void store(Properties properties, String file) {
+        File fileStorage = new File(file);
         try {
-            properties.store(new FileOutputStream(new File(file)), StringUtils.EMPTY);
+            properties.store(new FileOutputStream(fileStorage), StringUtils.EMPTY);
+            DropBoxHelper.uploadFile(DropBoxHelper.getRemoteFile(REMOTE_ROOT_DBOX, file), fileStorage);
         } catch(Exception e) {
             LOGGER.error("Could not sotre " + file, e);
         }
