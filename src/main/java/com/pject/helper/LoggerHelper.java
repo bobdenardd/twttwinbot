@@ -13,7 +13,7 @@ import org.apache.log4j.Logger;
 public class LoggerHelper {
 
     private static final int MAX_LENGTH_DEBUG = 160;
-    private static final int MAX_LENGHT_ERROR = 160;
+    private static final int MAX_LENGHT_ERROR = 250;
     private static final String SPACE = " ";
 
     public static void info(Logger logger, String message) {

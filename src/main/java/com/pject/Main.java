@@ -43,10 +43,12 @@ public class Main {
 
     public static void main(String[] args) {
         // Extra shutter for not running during rush hours
-        if(Calendar.getInstance().get(Calendar.HOUR_OF_DAY) < 8 || Calendar.getInstance().get(Calendar.HOUR_OF_DAY) > 22) {
-            LoggerHelper.info(LOGGER, "Out of time range, aborting");
+        int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+        if(hour < 8 || hour > 22 || hour % 2 == 1) {
+            LoggerHelper.info(LOGGER, "Hour of day: " + hour + " out of time range, aborting");
             System.exit(0);
         }
+
         // Initializing
         LoggerHelper.info(LOGGER, "Starting the twitter winning bot");
         if(args.length != 5) {
@@ -138,11 +140,11 @@ public class Main {
         try {
             if (TweetAnalyzer.needsRetweet(toConsider.getText())) {
                 LoggerHelper.debug(LOGGER, " -> Needs retweeting");
-                retweetNumber++;
                 TwitterProxy.retweet(twitter, toConsider);
+                retweetNumber++;
             }
         } catch (Exception e) {
-            LoggerHelper.error(LOGGER, "Could not retweet tweet " + status.getId() + ":" + status.getText(), e);
+            LoggerHelper.error(LOGGER, "Could not retweet tweet ", e);
         }
             // Checking for follow need
         try {
