@@ -29,7 +29,7 @@ public class LoggerHelper {
 
     public static void error(Logger logger, String message, Exception e) {
         message = message.replace("\n", SPACE).replace("\r", SPACE);
-        logger.error(message + (e != null ? ": " + StringUtils.abbreviate(StringUtils.abbreviate(e.getMessage(), 45), MAX_LENGHT_ERROR) : StringUtils.EMPTY));
+        logger.error(message + (e != null ? ": " + StringUtils.abbreviate(StringUtils.abbreviate(e.getMessage(), MAX_LENGHT_ERROR), MAX_LENGHT_ERROR) : StringUtils.EMPTY));
     }
 
 }
