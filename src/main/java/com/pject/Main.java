@@ -1,6 +1,7 @@
 package com.pject;
 
 import com.google.common.collect.Lists;
+import com.google.common.primitives.Longs;
 import com.pject.helper.DropBoxHelper;
 import com.pject.helper.LoggerHelper;
 import com.pject.helper.TweetAnalyzer;
@@ -52,7 +53,7 @@ public class Main {
         // Initializing
         LoggerHelper.info(LOGGER, "Starting the twitter winning bot");
         if(args.length != 5) {
-            LoggerHelper.error(LOGGER, "Args: consumerKey consumerSecret accessToken accesTokenSecret", null);
+            LoggerHelper.error(LOGGER, "Args: consumerKey consumerSecret accessToken accesTokenSecret, dBoxToken", null);
             System.exit(1);
         }
         String consumerKey = args[0];
@@ -65,6 +66,9 @@ public class Main {
         } catch (Exception e) {
             LoggerHelper.error(LOGGER, "Could not init the twitter proxy", e);
         }
+
+        /*unfollowRoutine();
+        System.exit(0);*/
 
         // Searching for tweets
         List<Status> result = searchForTweets();
@@ -185,18 +189,22 @@ public class Main {
     // yet to come
     private static void unfollowRoutine() {
         try {
-            User u1 = null;
+            List<Long> userIds = Lists.newArrayList();
             long cursor = -1;
             IDs ids;
             do {
                 ids = twitter.getFriendsIDs(cursor);
-
                 for (long id : ids.getIDs()) {
-                    System.out.println(id);
-                    User user = twitter.showUser(id);
-                    System.out.println(id + ":" + user.getName());
+                    userIds.add(id);
                 }
             } while ((cursor = ids.getNextCursor()) != 0);
+            int size = userIds.size();
+            int index = 0;
+            for(List<Long> miniList : Lists.partition(userIds, 5)) {
+                for(User user : twitter.lookupUsers(Longs.toArray(miniList))) {
+                    System.out.println(user.getName());
+                }
+            }
         } catch (Exception e) {
             System.err.println("Could not trigger unfollow routine " + e.getMessage());
         }
