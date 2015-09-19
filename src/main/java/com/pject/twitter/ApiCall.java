@@ -1,4 +1,4 @@
-package com.pject.helper;
+package com.pject.twitter;
 
 public enum ApiCall {
 

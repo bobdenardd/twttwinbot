@@ -2,10 +2,13 @@ package com.pject;
 
 import com.google.common.collect.Lists;
 import com.google.common.primitives.Longs;
+import com.pject.exceptions.StartupException;
+import com.pject.helper.BotPropertiesHelper;
 import com.pject.helper.DropBoxHelper;
 import com.pject.helper.LoggerHelper;
-import com.pject.helper.TweetAnalyzer;
-import com.pject.helper.TwitterProxy;
+import com.pject.helper.SchedulingHelper;
+import com.pject.twitter.TweetAnalyzer;
+import com.pject.twitter.TwitterProxy;
 import com.pject.persistence.Persistence;
 import com.pject.persistence.Tweets;
 import com.pject.persistence.Users;
@@ -20,7 +23,6 @@ import twitter4j.TwitterFactory;
 import twitter4j.User;
 import twitter4j.conf.ConfigurationBuilder;
 
-import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -33,6 +35,7 @@ import java.util.List;
 public class Main {
 
     private static final Logger LOGGER = Logger.getLogger(Main.class);
+
     private static final String SEARCH_QUERY = "concours OR gagner";
 
     private static Twitter twitter;
@@ -43,32 +46,45 @@ public class Main {
     private static int followNumber = 0;
 
     public static void main(String[] args) {
-        // Extra shutter for not running during rush hours
-        int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
-        if(hour < 8 || hour > 22 || hour % 2 == 1) {
-            LoggerHelper.info(LOGGER, "Hour of day: " + hour + " out of time range, aborting");
-            System.exit(0);
-        }
-
-        // Initializing
         LoggerHelper.info(LOGGER, "Starting the twitter winning bot");
-        if(args.length != 5) {
-            LoggerHelper.error(LOGGER, "Args: consumerKey consumerSecret accessToken accesTokenSecret, dBoxToken", null);
+
+        // Checking schedule
+        if (!SchedulingHelper.isValidRun()) {
+            LoggerHelper.error(LOGGER, "Bot startup is outside schedule", null);
             System.exit(1);
         }
-        String consumerKey = args[0];
-        String consumerSecret = args[1];
-        String accessToken = args[2];
-        String accessTokenSecret = args[3];
-        String dropBoxToken = args[4];
+
+        // Initializing bot properties
         try {
-            init(consumerKey, consumerSecret, accessToken, accessTokenSecret, dropBoxToken);
-        } catch (Exception e) {
+            BotPropertiesHelper.init(args);
+        } catch (StartupException e) {
+            LoggerHelper.error(LOGGER, "Could not start bot", e);
+            System.exit(1);
+        }
+
+        // Initializing twitter api client
+        try {
+            init(BotPropertiesHelper.getConsumerKey(),
+                    BotPropertiesHelper.getConsumerSecret(),
+                    BotPropertiesHelper.getAccessToken(),
+                    BotPropertiesHelper.getAccessTokenSecret(),
+                    BotPropertiesHelper.getDropBoxToken());
+        } catch (TwitterException e) {
             LoggerHelper.error(LOGGER, "Could not init the twitter proxy", e);
         }
 
-        /*unfollowRoutine();
-        System.exit(0);*/
+        // Persisting and optional error dumping
+        Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+            @Override
+            public void run() {
+                LoggerHelper.info(LOGGER, "Persisting tweets and info");
+                Persistence.storeTweets(tweets);
+                Persistence.storeUsers(users);
+                if(BotPropertiesHelper.getExtraErrorLogging()) {
+                    LoggerHelper.dumpErrors();
+                }
+            }
+        }));
 
         // Searching for tweets
         List<Status> result = searchForTweets();
@@ -81,11 +97,6 @@ public class Main {
         // Quick stats
         LoggerHelper.info(LOGGER, "Number of retweets: " + retweetNumber);
         LoggerHelper.info(LOGGER, "Number of follows: " + followNumber);
-
-        // Closing the persistence
-        LoggerHelper.info(LOGGER, "Persisting tweets and info");
-        Persistence.storeTweets(tweets);
-        Persistence.storeUsers(users);
     }
 
     private static void init(String consumerKey, String consumerSecret, String accessToken, String accessTokenSecret, String dropBoxToken) throws TwitterException {
@@ -150,7 +161,7 @@ public class Main {
         } catch (Exception e) {
             LoggerHelper.error(LOGGER, "Could not retweet tweet ", e);
         }
-            // Checking for follow need
+        // Checking for follow need
         try {
             if (TweetAnalyzer.needsFollow(toConsider.getText())) {
                 LoggerHelper.debug(LOGGER, " -> Needs follow");
@@ -172,7 +183,7 @@ public class Main {
             // Marking as processed
             tweets.markAsSeen(status);
             tweets.markAsSeen(toConsider);
-        } catch(Exception e) {
+        } catch (Exception e) {
             LoggerHelper.error(LOGGER, "Could not follow", e);
         }
     }
@@ -186,7 +197,7 @@ public class Main {
         return status;
     }
 
-    // yet to come
+    // yet to come, too busy taking dumps n shit
     private static void unfollowRoutine() {
         try {
             List<Long> userIds = Lists.newArrayList();
@@ -200,8 +211,8 @@ public class Main {
             } while ((cursor = ids.getNextCursor()) != 0);
             int size = userIds.size();
             int index = 0;
-            for(List<Long> miniList : Lists.partition(userIds, 5)) {
-                for(User user : twitter.lookupUsers(Longs.toArray(miniList))) {
+            for (List<Long> miniList : Lists.partition(userIds, 5)) {
+                for (User user : twitter.lookupUsers(Longs.toArray(miniList))) {
                     System.out.println(user.getName());
                 }
             }

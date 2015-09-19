@@ -1,5 +1,7 @@
 package com.pject.persistence;
 
+import com.pject.BotSetup;
+import com.pject.helper.BotPropertiesHelper;
 import com.pject.helper.DropBoxHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -16,20 +18,16 @@ import java.util.Properties;
  *         Last: 04/09/15 14:30
  * @version $Id$
  */
-public class Persistence {
+public class Persistence implements BotSetup {
 
     private static final Logger LOGGER = Logger.getLogger(Persistence.class);
-
-    private static final String REMOTE_ROOT_DBOX = "/twttwinbot";
-    private static final String TWEETS_FILE = "tweets.dat";
-    private static final String USERS_FILE = "users.dat";
 
     public static Tweets loadTweets() {
         Properties properties = new Properties();
         File tweetsFile = new File(TWEETS_FILE);
         tweetsFile.deleteOnExit();
         try {
-            DropBoxHelper.downloadFile(DropBoxHelper.getRemoteFile(REMOTE_ROOT_DBOX, TWEETS_FILE), tweetsFile);
+            DropBoxHelper.downloadFile(DropBoxHelper.getRemoteFile(REMOTE_ROOT_DBOX, BotPropertiesHelper.getBotUniqueId(), TWEETS_FILE), tweetsFile);
             properties.load(new FileInputStream(tweetsFile));
             LOGGER.info("Loaded " + properties.size() + " tweets");
         } catch(Exception e) {
@@ -43,7 +41,7 @@ public class Persistence {
         File usersFile = new File(USERS_FILE);
         usersFile.deleteOnExit();
         try {
-            DropBoxHelper.downloadFile(DropBoxHelper.getRemoteFile(REMOTE_ROOT_DBOX, USERS_FILE), usersFile);
+            DropBoxHelper.downloadFile(DropBoxHelper.getRemoteFile(REMOTE_ROOT_DBOX, BotPropertiesHelper.getBotUniqueId(), USERS_FILE), usersFile);
             properties.load(new FileInputStream(usersFile));
             LOGGER.info("Loaded " + properties.size() + " followed users");
         } catch(Exception e) {
@@ -64,9 +62,9 @@ public class Persistence {
         File fileStorage = new File(file);
         try {
             properties.store(new FileOutputStream(fileStorage), StringUtils.EMPTY);
-            DropBoxHelper.uploadFile(DropBoxHelper.getRemoteFile(REMOTE_ROOT_DBOX, file), fileStorage);
+            DropBoxHelper.uploadFile(DropBoxHelper.getRemoteFile(REMOTE_ROOT_DBOX, BotPropertiesHelper.getBotUniqueId(), file), fileStorage);
         } catch(Exception e) {
-            LOGGER.error("Could not sotre " + file, e);
+            LOGGER.error("Could not store " + file, e);
         }
     }
 

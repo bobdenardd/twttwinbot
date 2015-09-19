@@ -1,4 +1,4 @@
-package com.pject.helper;
+package com.pject.twitter;
 
 import com.google.common.collect.Maps;
 import com.pject.exceptions.NoRemainingException;

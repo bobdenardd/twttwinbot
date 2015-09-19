@@ -1,7 +1,8 @@
-package com.pject.helper;
+package com.pject.twitter;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
+import com.pject.helper.LoggerHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 

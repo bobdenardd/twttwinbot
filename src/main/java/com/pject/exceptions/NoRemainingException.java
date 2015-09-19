@@ -1,6 +1,6 @@
 package com.pject.exceptions;
 
-import com.pject.helper.ApiCall;
+import com.pject.twitter.ApiCall;
 
 /**
  * NoRemainingException - Short description of the class
