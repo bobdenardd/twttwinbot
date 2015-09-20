@@ -51,7 +51,7 @@ public class BotPropertiesHelper implements BotSetup {
                 LOGGER.debug("Starting up from bot args");
             }
             if(args.length < 6) {
-                throw new StartupException("Not enough arguments for starting up post");
+                throw new StartupException("Not enough arguments for starting up bot");
             }
             botProperties.put(BOT_UNIQUE_ID_PROP, args[0]);
             botProperties.put(BOT_CONSUMER_KEY_PROP, args[1]);
