@@ -21,7 +21,7 @@ public interface BotSetup {
     static final String DEFAULT_SCHEDULING_FILE     = "scheduling.properties";
 
     static final String PROPERTIES_FILE_PROP_NAME   = "properties";
-    static final String DEFAULT_PROPERTIES_FILE     = "bot.properies";
+    static final String DEFAULT_PROPERTIES_FILE     = "bot.properties";
 
     static final DateFormat DATE_FORMAT = new SimpleDateFormat("dd-MM-YYYY_HH-mm");
 

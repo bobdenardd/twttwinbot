@@ -8,6 +8,7 @@ import org.apache.log4j.Logger;
 import java.io.File;
 import java.io.FileInputStream;
 import java.lang.reflect.Field;
+import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -63,15 +64,19 @@ public class BotPropertiesHelper implements BotSetup {
             }
         }
 
+        // Logging bot properties
+        if(LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Starting bot with properties:");
+            for(Map.Entry entry : botProperties.entrySet()) {
+                LOGGER.debug(entry.getKey() + "=" + entry.getValue());
+            }
+        }
+
         // Analyzing bot properties validity
         for(Field field : BotPropertiesHelper.class.getDeclaredFields()) {
             if(field.getName().startsWith("BOT_")) {
                 try {
-                    String value = botProperties.getProperty(field.get(null).toString());
-                    if(LOGGER.isDebugEnabled()) {
-                        LOGGER.debug("Starting property: " + field.get(null) + "=" + value);
-                    }
-                    if(StringUtils.isEmpty(value)) {
+                    if(StringUtils.isEmpty(botProperties.getProperty(field.get(null).toString()))) {
                         throw new StartupException("Could not determine value for " + field.getName());
                     }
                 } catch(Exception e) {
@@ -107,7 +112,7 @@ public class BotPropertiesHelper implements BotSetup {
 
     public static boolean getExtraErrorLogging() {
         // That hurts but I had to take a massive dump and ain't got no time for this kind of shit
-        return Boolean.getBoolean(botProperties.getProperty(OPT_LOG_ERRORS, String.valueOf(Boolean.FALSE)));
+        return Boolean.valueOf(botProperties.getProperty(OPT_LOG_ERRORS, String.valueOf(Boolean.FALSE)));
     }
 
 }
