@@ -159,7 +159,7 @@ public class Main {
                 retweetNumber++;
             }
         } catch (Exception e) {
-            LoggerHelper.error(LOGGER, "Could not retweet tweet ", e);
+            LoggerHelper.error(LOGGER, "Could not retweet tweet " + toConsider.getText(), e);
         }
         // Checking for follow need
         try {
