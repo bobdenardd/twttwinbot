@@ -39,10 +39,10 @@ public class LoggerHelper implements BotSetup {
     }
 
     public static void error(Logger logger, String message, Exception e) {
+        message = message.replace("\n", SPACE).replace("\r", SPACE);
         if(BotPropertiesHelper.getExtraErrorLogging()) {
             errors.add(message + ":: " + e.toString().replace("\n", SPACE));
         }
-        message = message.replace("\n", SPACE).replace("\r", SPACE);
         logger.error(message + (e != null ? ": " + StringUtils.abbreviate(StringUtils.abbreviate(e.getMessage(), MAX_LENGHT_ERROR), MAX_LENGHT_ERROR) : StringUtils.EMPTY));
     }
 
