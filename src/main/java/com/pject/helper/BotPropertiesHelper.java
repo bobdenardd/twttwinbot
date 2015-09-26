@@ -31,6 +31,7 @@ public class BotPropertiesHelper implements BotSetup {
     private static final String BOT_DROPBOX_TOKEN_PROP          = "dropboxToken";
 
     private static final String OPT_LOG_ERRORS                  = "logErrors";
+    private static final String OPT_DRY_RUN                     = "dryRun";
 
     private static Properties botProperties = new Properties();
 
@@ -113,6 +114,10 @@ public class BotPropertiesHelper implements BotSetup {
     public static boolean getExtraErrorLogging() {
         // That hurts but I had to take a massive dump and ain't got no time for this kind of shit
         return Boolean.valueOf(botProperties.getProperty(OPT_LOG_ERRORS, String.valueOf(Boolean.FALSE)));
+    }
+
+    public static boolean getDryRun() {
+        return Boolean.valueOf(botProperties.getProperty(OPT_DRY_RUN, String.valueOf(Boolean.FALSE)));
     }
 
 }

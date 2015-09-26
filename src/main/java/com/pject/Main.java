@@ -73,6 +73,12 @@ public class Main {
             LoggerHelper.error(LOGGER, "Could not init the twitter proxy", e);
         }
 
+        // Checking if the bot is in dry run mode
+        if(BotPropertiesHelper.getDryRun()) {
+            LoggerHelper.info(LOGGER, "Dry run mode, aborting");
+            System.exit(0);
+        }
+
         // Persisting and optional error dumping
         Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
             @Override
