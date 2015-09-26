@@ -2,7 +2,6 @@ package com.pject.twitter;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
-import com.pject.helper.LoggerHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
@@ -22,9 +21,9 @@ public class TweetAnalyzer {
 
     private static final Logger LOGGER = Logger.getLogger(TweetAnalyzer.class);
 
-    private static final Pattern USER_PATTERN = Pattern.compile("@([a-z0-9_]+)");
-    private static final Pattern RT_PATTERN = Pattern.compile("(?i).*(\\+| )(rt|retweet)(\\+| ).*");
-    private static final String SPACE = " ";
+    private static final Pattern USER_PATTERN   = Pattern.compile("@([a-z0-9_]+)");
+    private static final Pattern RT_PATTERN     = Pattern.compile("(?i).*(\\+| )(rt|retweet)(\\+| ).*");
+    private static final String SPACE           = " ";
 
     public static boolean needsRetweet(String tweet) {
         return StringUtils.isNotEmpty(tweet) && RT_PATTERN.matcher(singleLine(tweet)).matches();
@@ -35,7 +34,9 @@ public class TweetAnalyzer {
     }
 
     public static List<String> extractUsersToFollow(String tweet) {
-        LoggerHelper.debug(LOGGER, "Extracting users to follow from tweet: " + tweet);
+        if(LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Extracting users to follow from tweet: " + tweet);
+        }
         if (StringUtils.isNotEmpty(tweet)) {
             List<String> result = Lists.newArrayList();
 
@@ -52,7 +53,9 @@ public class TweetAnalyzer {
                     result.add(user.replaceFirst("@", StringUtils.EMPTY));
                 }
             }
-            LoggerHelper.debug(LOGGER, "Found " + result.size() + " users to follow: " + Joiner.on(",").join(result));
+            if(LOGGER.isDebugEnabled()) {
+                LOGGER.debug("Found " + result.size() + " users to follow: " + Joiner.on(",").join(result));
+            }
             return result;
         }
         return Collections.emptyList();

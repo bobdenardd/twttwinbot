@@ -1,4 +1,4 @@
-package com.pject.helper;
+package com.pject.helpers;
 
 import com.dropbox.core.DbxClient;
 import com.dropbox.core.DbxRequestConfig;
@@ -57,12 +57,9 @@ public class DropBoxHelper {
         LOGGER.info("Uploading file " + localFile.getAbsolutePath() + " to " + remoteFile);
         initIfNeeded();
         try {
-            FileInputStream inputStream = new FileInputStream(localFile);
-            try {
+            try (FileInputStream inputStream = new FileInputStream(localFile)) {
                 client.uploadFile(remoteFile, DbxWriteMode.force(), localFile.length(), inputStream);
                 LOGGER.info("Uploaded file " + localFile.getAbsolutePath() + " to " + remoteFile);
-            } finally {
-                inputStream.close();
             }
         } catch (Exception e) {
             LOGGER.error("Could not upload file " + localFile.getAbsolutePath() + " to " + remoteFile + ": " + e.getMessage());

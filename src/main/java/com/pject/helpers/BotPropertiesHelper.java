@@ -1,7 +1,7 @@
-package com.pject.helper;
+package com.pject.helpers;
 
-import com.pject.BotSetup;
-import com.pject.exceptions.StartupException;
+import com.pject.bot.BotSetup;
+import com.pject.exceptions.BotInitPropertiesException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
@@ -22,7 +22,7 @@ public class BotPropertiesHelper implements BotSetup {
 
     private static final Logger LOGGER = Logger.getLogger(BotPropertiesHelper.class);
 
-    // Defining custom properties
+    // Defining mandatory properties
     private static final String BOT_UNIQUE_ID_PROP              = "uniqueId";
     private static final String BOT_CONSUMER_KEY_PROP           = "consumerKey";
     private static final String BOT_CONSUMER_KEY_SECRET_DROP    = "consumerKeySecret";
@@ -30,12 +30,14 @@ public class BotPropertiesHelper implements BotSetup {
     private static final String BOT_ACCESS_TOKEN_SECRET_PROP    = "accessTokenSecret";
     private static final String BOT_DROPBOX_TOKEN_PROP          = "dropboxToken";
 
+    // Defining optional properties
     private static final String OPT_LOG_ERRORS                  = "logErrors";
     private static final String OPT_DRY_RUN                     = "dryRun";
+    private static final String OPT_LOG_STATS                   = "logStats";
 
     private static Properties botProperties = new Properties();
 
-    public static void init(String[] args) throws StartupException {
+    public static void init(String[] args) throws BotInitPropertiesException {
         // Attempting to load bot properties
         File propertiesFile = new File(System.getProperty(PROPERTIES_FILE_PROP_NAME, DEFAULT_PROPERTIES_FILE));
         if(propertiesFile.exists() && propertiesFile.length() > 0) {
@@ -52,7 +54,7 @@ public class BotPropertiesHelper implements BotSetup {
                 LOGGER.debug("Starting up from bot args");
             }
             if(args.length < 6) {
-                throw new StartupException("Not enough arguments for starting up bot");
+                throw new BotInitPropertiesException("Not enough arguments for starting up bot");
             }
             botProperties.put(BOT_UNIQUE_ID_PROP, args[0]);
             botProperties.put(BOT_CONSUMER_KEY_PROP, args[1]);
@@ -78,10 +80,10 @@ public class BotPropertiesHelper implements BotSetup {
             if(field.getName().startsWith("BOT_")) {
                 try {
                     if(StringUtils.isEmpty(botProperties.getProperty(field.get(null).toString()))) {
-                        throw new StartupException("Could not determine value for " + field.getName());
+                        throw new BotInitPropertiesException("Could not determine value for " + field.getName());
                     }
                 } catch(Exception e) {
-                    throw new StartupException("Could not determine value for " + field.getName());
+                    throw new BotInitPropertiesException("Could not determine value for " + field.getName());
                 }
             }
         }
@@ -112,12 +114,15 @@ public class BotPropertiesHelper implements BotSetup {
     }
 
     public static boolean getExtraErrorLogging() {
-        // That hurts but I had to take a massive dump and ain't got no time for this kind of shit
         return Boolean.valueOf(botProperties.getProperty(OPT_LOG_ERRORS, String.valueOf(Boolean.FALSE)));
     }
 
     public static boolean getDryRun() {
         return Boolean.valueOf(botProperties.getProperty(OPT_DRY_RUN, String.valueOf(Boolean.FALSE)));
+    }
+
+    public static boolean getLogStats() {
+        return Boolean.valueOf(botProperties.getProperty(OPT_LOG_STATS, String.valueOf(Boolean.FALSE)));
     }
 
 }

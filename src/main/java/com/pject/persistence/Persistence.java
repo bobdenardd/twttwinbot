@@ -1,8 +1,8 @@
 package com.pject.persistence;
 
-import com.pject.BotSetup;
-import com.pject.helper.BotPropertiesHelper;
-import com.pject.helper.DropBoxHelper;
+import com.pject.bot.BotSetup;
+import com.pject.helpers.BotPropertiesHelper;
+import com.pject.helpers.DropBoxHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 

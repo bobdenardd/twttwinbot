@@ -1,6 +1,6 @@
-package com.pject.helper;
+package com.pject.helpers;
 
-import com.pject.BotSetup;
+import com.pject.bot.BotSetup;
 import org.apache.log4j.Logger;
 
 import java.io.File;
