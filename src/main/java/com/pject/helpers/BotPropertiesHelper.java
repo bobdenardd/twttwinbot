@@ -1,5 +1,6 @@
 package com.pject.helpers;
 
+import com.google.common.base.Splitter;
 import com.pject.bot.BotSetup;
 import com.pject.exceptions.BotInitPropertiesException;
 import org.apache.commons.lang3.StringUtils;
@@ -8,6 +9,8 @@ import org.apache.log4j.Logger;
 import java.io.File;
 import java.io.FileInputStream;
 import java.lang.reflect.Field;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -34,6 +37,8 @@ public class BotPropertiesHelper implements BotSetup {
     private static final String OPT_LOG_ERRORS                  = "logErrors";
     private static final String OPT_DRY_RUN                     = "dryRun";
     private static final String OPT_LOG_STATS                   = "logStats";
+    private static final String OPT_SOURCES                     = "sources";
+    private static final String OPT_READ_ONLY                   = "readOnly";
 
     private static Properties botProperties = new Properties();
 
@@ -123,6 +128,15 @@ public class BotPropertiesHelper implements BotSetup {
 
     public static boolean getLogStats() {
         return Boolean.valueOf(botProperties.getProperty(OPT_LOG_STATS, String.valueOf(Boolean.FALSE)));
+    }
+
+    public static List<String> getSources() {
+        String sourcesString = botProperties.getProperty(OPT_SOURCES, StringUtils.EMPTY);
+        return StringUtils.isNotEmpty(sourcesString) ? Splitter.on(",").splitToList(sourcesString): Collections.<String>emptyList();
+    }
+
+    public static boolean getReadOnly() {
+        return Boolean.valueOf(botProperties.getProperty(OPT_READ_ONLY, String.valueOf(Boolean.FALSE)));
     }
 
 }

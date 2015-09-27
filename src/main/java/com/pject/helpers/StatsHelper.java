@@ -35,17 +35,19 @@ public class StatsHelper implements BotSetup {
     }
 
     public static void dumpStats() {
-        try {
-            File statsFile = new File("errors-" + DATE_FORMAT.format(new Date()) + ".txt");
-            statsFile.deleteOnExit();
-            PrintWriter writer = new PrintWriter(statsFile);
-            writer.println("Number of retweets:  " + numberOfRetweets);
-            writer.println("Number of follows:   " + numberOfFollows);
-            writer.println("Number of unfollows: " + numberOfUnfollows);
-            writer.close();
-            DropBoxHelper.uploadFile(DropBoxHelper.getRemoteFile(REMOTE_ROOT_DBOX, BotPropertiesHelper.getBotUniqueId(), statsFile.getName()), statsFile);
-        } catch(Exception e) {
-            LOGGER.warn("Could not dump errors file", e);
+        if(! BotPropertiesHelper.getReadOnly()) {
+            try {
+                File statsFile = new File("errors-" + DATE_FORMAT.format(new Date()) + ".txt");
+                statsFile.deleteOnExit();
+                PrintWriter writer = new PrintWriter(statsFile);
+                writer.println("Number of retweets:  " + numberOfRetweets);
+                writer.println("Number of follows:   " + numberOfFollows);
+                writer.println("Number of unfollows: " + numberOfUnfollows);
+                writer.close();
+                DropBoxHelper.uploadFile(DropBoxHelper.getRemoteFile(REMOTE_ROOT_DBOX, BotPropertiesHelper.getBotUniqueId(), statsFile.getName()), statsFile);
+            } catch (Exception e) {
+                LOGGER.warn("Could not dump errors file", e);
+            }
         }
     }
 

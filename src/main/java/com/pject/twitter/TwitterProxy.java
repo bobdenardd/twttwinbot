@@ -2,6 +2,8 @@ package com.pject.twitter;
 
 import com.google.common.collect.Maps;
 import com.pject.exceptions.NoRemainingException;
+import com.pject.helpers.BotPropertiesHelper;
+import com.pject.helpers.LogFormatHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import twitter4j.Query;
@@ -58,7 +60,11 @@ public class TwitterProxy {
     public static void retweet(Twitter twitter, Status status) throws TwitterException, NoRemainingException {
         if(remaining.get(ApiCall.RETWEET) > 0) {
             consume(ApiCall.RETWEET);
-            twitter.retweetStatus(status.getId());
+            if(!BotPropertiesHelper.getReadOnly()) {
+                twitter.retweetStatus(status.getId());
+            } else {
+                LOGGER.info("[READ ONLY] Retweet: " + LogFormatHelper.oneLine(status.getText()));
+            }
             return;
         }
         throw new NoRemainingException(ApiCall.RETWEET);
@@ -67,9 +73,22 @@ public class TwitterProxy {
     public static User follow(Twitter twitter, String userName, boolean follow) throws TwitterException, NoRemainingException {
         if(remaining.get(ApiCall.FOLLOW) > 0) {
             consume(ApiCall.FOLLOW);
-            return twitter.createFriendship(userName, follow);
+            if(! BotPropertiesHelper.getReadOnly()) {
+                return twitter.createFriendship(userName, follow);
+            } else {
+                LOGGER.info("[READ ONLY] Follow: " + userName);
+                return null;
+            }
         }
         throw new NoRemainingException(ApiCall.FOLLOW);
+    }
+
+    public static void tweet(Twitter twitter, String message) throws TwitterException, NoRemainingException {
+        if(! BotPropertiesHelper.getReadOnly()) {
+            twitter.updateStatus(message);
+        } else {
+            LOGGER.info("[READ ONLY] Tweet: " + message);
+        }
     }
 
     private static void consume(ApiCall method) {

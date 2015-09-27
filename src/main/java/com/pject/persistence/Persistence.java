@@ -59,12 +59,14 @@ public class Persistence implements BotSetup {
     }
 
     public static void store(Properties properties, String file) {
-        File fileStorage = new File(file);
-        try {
-            properties.store(new FileOutputStream(fileStorage), StringUtils.EMPTY);
-            DropBoxHelper.uploadFile(DropBoxHelper.getRemoteFile(REMOTE_ROOT_DBOX, BotPropertiesHelper.getBotUniqueId(), file), fileStorage);
-        } catch(Exception e) {
-            LOGGER.error("Could not store " + file, e);
+        if(! BotPropertiesHelper.getReadOnly()) {
+            File fileStorage = new File(file);
+            try {
+                properties.store(new FileOutputStream(fileStorage), StringUtils.EMPTY);
+                DropBoxHelper.uploadFile(DropBoxHelper.getRemoteFile(REMOTE_ROOT_DBOX, BotPropertiesHelper.getBotUniqueId(), file), fileStorage);
+            } catch (Exception e) {
+                LOGGER.error("Could not store " + file, e);
+            }
         }
     }
 

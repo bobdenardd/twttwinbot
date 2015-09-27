@@ -25,7 +25,7 @@ public class LogFormatHelper {
         return StringUtils.abbreviate(oneLine(tweetMessage), 140);
     }
 
-    private static String oneLine(String message) {
+    public static String oneLine(String message) {
         return StringUtils.isNotEmpty(message) ? message.replace("\n", SPACE).replace("\r", SPACE) : StringUtils.EMPTY;
     }
 

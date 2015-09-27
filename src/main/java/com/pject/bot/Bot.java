@@ -2,15 +2,19 @@ package com.pject.bot;
 
 import com.google.common.collect.Lists;
 import com.pject.exceptions.BotInitTwitterException;
+import com.pject.exceptions.NoRemainingException;
 import com.pject.helpers.BotPropertiesHelper;
 import com.pject.helpers.DropBoxHelper;
 import com.pject.helpers.ErrorHelper;
-import com.pject.helpers.LogFormatHelper;import com.pject.helpers.StatsHelper;
+import com.pject.helpers.LogFormatHelper;
+import com.pject.helpers.SourcesHelper;
+import com.pject.helpers.StatsHelper;
 import com.pject.persistence.Persistence;
 import com.pject.persistence.Tweets;
 import com.pject.persistence.Users;
 import com.pject.twitter.TweetAnalyzer;
 import com.pject.twitter.TwitterProxy;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import twitter4j.IDs;
 import twitter4j.Query;
@@ -66,6 +70,9 @@ public class Bot implements BotSetup {
         // Initalizing persistence
         initPersistence();
 
+        // Initializing real tweet sources
+        SourcesHelper.init();
+
         // Persisting and optional error dumping
         Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
             @Override
@@ -79,10 +86,16 @@ public class Bot implements BotSetup {
         // Searching for tweets
         List<Status> result = searchForTweets();
 
+        // Real tweets at the beginning of the run
+        tweetReal(REAL_TWEETS_BEGINNING_MIN + RANDOM.nextInt(REAL_TWEETS_BEGINING_MAX - REAL_TWEETS_BEGINNING_MIN));
+
         // Handling new tweets
         for (Status status : result) {
             processTweet(status);
         }
+
+        // Real tweets at the end of the run
+        tweetReal(REAL_TWEETS_END_MIN + RANDOM.nextInt(REAL_TWEETS_END_MAX - REAL_TWEETS_END_MIN));
 
         // Unfollow routine
         unfollowRoutine();
@@ -134,6 +147,7 @@ public class Bot implements BotSetup {
                 StatsHelper.addRetweetCount();
             }
         } catch (Exception e) {
+            ErrorHelper.addError(LogFormatHelper.formatExceptionMessage(e));
             LOGGER.error("Could not retweet " + LogFormatHelper.getShortTweet(toConsider.getText()) + ": " + LogFormatHelper.formatExceptionMessage(e));
         }
     }
@@ -166,6 +180,7 @@ public class Bot implements BotSetup {
             tweets.markAsSeen(original);
             tweets.markAsSeen(toConsider);
         } catch (Exception e) {
+            ErrorHelper.addError(LogFormatHelper.formatExceptionMessage(e));
             LOGGER.error("Could not follow: " + LogFormatHelper.formatExceptionMessage(e));
         }
     }
@@ -202,12 +217,15 @@ public class Bot implements BotSetup {
                 }
                 for(Long userToUnfollow : idsToUnfollow) {
                     try {
-                        this.twitter.destroyFriendship(userToUnfollow);
+                        if(! BotPropertiesHelper.getReadOnly()) {
+                            this.twitter.destroyFriendship(userToUnfollow);
+                        }
                         StatsHelper.addUnfollowCount();
                         if (LOGGER.isDebugEnabled()) {
-                            LOGGER.debug(this.twitter.lookupUsers(new long[]{userToUnfollow}).get(0).getScreenName());
+                            LOGGER.debug("Unfollowing " + this.twitter.lookupUsers(new long[]{userToUnfollow}).get(0).getScreenName());
                         }
                     } catch(TwitterException e) {
+                        ErrorHelper.addError(LogFormatHelper.formatExceptionMessage(e));
                         LOGGER.error("Could not unfollow user " + userToUnfollow + ": " + LogFormatHelper.formatExceptionMessage(e));
                     }
                 }
@@ -218,7 +236,20 @@ public class Bot implements BotSetup {
         }
     }
 
-    private static Status getRootTweet(Status status) {
+    private void tweetReal(int count) {
+        for(int i = 0; i < count; i++) {
+            String message = SourcesHelper.getTweet();
+            if(StringUtils.isNotEmpty(message)) {
+                try {
+                    TwitterProxy.tweet(this.twitter, SourcesHelper.getTweet());
+                } catch(TwitterException|NoRemainingException e) {
+                    LOGGER.error("Could not tweet real status " + message + ": " + LogFormatHelper.formatExceptionMessage(e));
+                }
+            }
+        }
+    }
+
+    private Status getRootTweet(Status status) {
         int index = 0;
         while (status.isRetweet() && index < 5) {
             status = status.getRetweetedStatus();
@@ -255,21 +286,23 @@ public class Bot implements BotSetup {
     }
 
     private void terminateBot() {
-        // Persisting discovered tweets and users
-        LOGGER.info("Persisting tweets and info");
-        Persistence.storeTweets(this.tweets);
-        Persistence.storeUsers(this.users);
+        if(!BotPropertiesHelper.getDryRun()) {
+            // Persisting discovered tweets and users
+            LOGGER.info("Persisting tweets and info");
+            Persistence.storeTweets(this.tweets);
+            Persistence.storeUsers(this.users);
 
-        // Dumping errors if necessary
-        if(BotPropertiesHelper.getExtraErrorLogging()) {
-            LOGGER.info("Dumping run errors");
-            ErrorHelper.dumpErrors();
-        }
+            // Dumping errors if necessary
+            if (BotPropertiesHelper.getExtraErrorLogging()) {
+                LOGGER.info("Dumping run errors");
+                ErrorHelper.dumpErrors();
+            }
 
-        // Dumping stats if necessary
-        if(BotPropertiesHelper.getLogStats()) {
-            LOGGER.info("Dumping run stats");
-            StatsHelper.dumpStats();
+            // Dumping stats if necessary
+            if (BotPropertiesHelper.getLogStats()) {
+                LOGGER.info("Dumping run stats");
+                StatsHelper.dumpStats();
+            }
         }
     }
 

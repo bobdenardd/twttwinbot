@@ -27,17 +27,19 @@ public class ErrorHelper implements BotSetup {
     }
 
     public static void dumpErrors() {
-        try {
-            File errorsFile = new File("errors-" + DATE_FORMAT.format(new Date()) + ".txt");
-            errorsFile.deleteOnExit();
-            PrintWriter writer = new PrintWriter(errorsFile);
-            for(String error : errors) {
-                writer.println(error);
+        if(! BotPropertiesHelper.getReadOnly()) {
+            try {
+                File errorsFile = new File("errors-" + DATE_FORMAT.format(new Date()) + ".txt");
+                errorsFile.deleteOnExit();
+                PrintWriter writer = new PrintWriter(errorsFile);
+                for (String error : errors) {
+                    writer.println(error);
+                }
+                writer.close();
+                DropBoxHelper.uploadFile(DropBoxHelper.getRemoteFile(REMOTE_ROOT_DBOX, BotPropertiesHelper.getBotUniqueId(), errorsFile.getName()), errorsFile);
+            } catch (Exception e) {
+                LOGGER.warn("Could not dump errors file", e);
             }
-            writer.close();
-            DropBoxHelper.uploadFile(DropBoxHelper.getRemoteFile(REMOTE_ROOT_DBOX, BotPropertiesHelper.getBotUniqueId(), errorsFile.getName()), errorsFile);
-        } catch(Exception e) {
-            LOGGER.warn("Could not dump errors file", e);
         }
     }
 
