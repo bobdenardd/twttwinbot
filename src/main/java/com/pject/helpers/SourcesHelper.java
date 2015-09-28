@@ -99,7 +99,7 @@ public class SourcesHelper implements BotSetup {
         init();
 
         // Triying out the sources
-        for(int i = 0; i < 30; i++) {
+        for(int i = 0; i < 40; i++) {
             System.out.println(getTweet());
         }
     }

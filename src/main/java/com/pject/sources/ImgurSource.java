@@ -39,9 +39,8 @@ public class ImgurSource implements Source {
 
     public ImgurSource() {
         LOGGER.info("Initializing the imgur source");
-        CloseableHttpClient httpclient = HttpClients.createDefault();
         HttpGet httpGet = new HttpGet(IMGUR_TRENDING_URL);
-        try (CloseableHttpResponse response = httpclient.execute(httpGet)){
+        try (CloseableHttpClient httpclient = HttpClients.createDefault(); CloseableHttpResponse response = httpclient.execute(httpGet)){
             if(response.getStatusLine().getStatusCode() == 200) {
                 String raw = EntityUtils.toString(response.getEntity());
                 Document doc = Jsoup.parse(raw);
