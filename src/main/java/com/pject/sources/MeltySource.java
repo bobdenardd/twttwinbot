@@ -48,6 +48,7 @@ public class MeltySource implements Source {
         for(String meltyRss : RSS) {
             processRss(meltyRss);
         }
+        LOGGER.info("Got " + this.sources + " sources");
     }
 
     private void processRss(String rss) {

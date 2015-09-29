@@ -35,6 +35,7 @@ public class QuotesSource implements Source {
     public QuotesSource() {
         LOGGER.info("Initializing the quotes source");
         downAndLoadQuotes();
+        LOGGER.info("Got " + this.quotes.size() + " sources");
     }
 
     private void downAndLoadQuotes() {

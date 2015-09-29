@@ -58,6 +58,7 @@ public class ImgurSource implements Source {
         } catch(IOException e) {
             LOGGER.error("Could not load imgur links: " + LogFormatHelper.formatExceptionMessage(e));
         }
+        LOGGER.info("Got " + this.imgurLinks.size() + " sources");
     }
 
     @Override
