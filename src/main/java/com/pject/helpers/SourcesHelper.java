@@ -54,7 +54,7 @@ public class SourcesHelper implements BotSetup {
         if(sources != null && sources.size() > 0) {
             int i = 0;
             String sourceTweet = sources.get(new Random().nextInt(sources.size())).getTweet();
-            while(StringUtils.isEmpty(sourceTweet) || i < MAX_SOURCE_TRIES) {
+            while(StringUtils.isEmpty(sourceTweet) && i < MAX_SOURCE_TRIES) {
                 sourceTweet = sources.get(new Random().nextInt(sources.size())).getTweet();
                 i++;
             }
