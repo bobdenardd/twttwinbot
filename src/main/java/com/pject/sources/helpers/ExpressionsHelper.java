@@ -15,10 +15,14 @@ public class ExpressionsHelper implements TeenageExpressions {
 
     private static final Random RANDOM  = new Random();
     private static final int MAX_EMOJIS = 3;
+    private static final String SPACE   = " ";
 
     public static String getRandomExpression() {
         if (RANDOM.nextBoolean()) {
-            return EXPRESSIONS.get(RANDOM.nextInt(EXPRESSIONS.size()));
+            String expression = EXPRESSIONS.get(RANDOM.nextInt(EXPRESSIONS.size()));
+            expression = getPrefixed(expression);
+            expression = getSwaggmaned(expression);
+            return expression;
         }
         return StringUtils.EMPTY;
     }
@@ -35,7 +39,28 @@ public class ExpressionsHelper implements TeenageExpressions {
     }
 
     public static String getRandomEmojiedExpression() {
-        return StringUtils.trimToEmpty(getRandomEmojis() + " " + getRandomExpression());
+        return StringUtils.trimToEmpty(getRandomEmojis() + SPACE + getRandomExpression());
+    }
+
+    private static String getPrefixed(String expression) {
+        if(RANDOM.nextBoolean()) {
+            return PREFIXES.get(RANDOM.nextInt(PREFIXES.size())) + SPACE + expression;
+        }
+        return expression;
+    }
+
+    private static String getSwaggmaned(String expression) {
+        return StringUtils.isNotEmpty(expression) && expression.endsWith("é") && RANDOM.nextBoolean() ?
+                replaceLast(expression, "é", "ey") : expression;
+    }
+
+    // Ugly shit from stackoverflow, ain't time for this
+    private static String replaceLast(String string, String substring, String replacement) {
+        int index = string.lastIndexOf(substring);
+        if (index == -1) {
+            return string;
+        }
+        return string.substring(0, index) + replacement + string.substring(index+substring.length());
     }
 
 }
