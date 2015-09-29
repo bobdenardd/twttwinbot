@@ -1,4 +1,4 @@
-package com.pject.sources;
+package com.pject.sources.file;
 
 import com.google.common.collect.Lists;
 import com.pject.helpers.DropBoxHelper;

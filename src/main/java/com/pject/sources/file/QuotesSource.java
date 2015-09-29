@@ -1,5 +1,6 @@
-package com.pject.sources;
+package com.pject.sources.file;
 
+import com.pject.sources.Source;
 import org.apache.log4j.Logger;
 
 /**

@@ -1,7 +1,8 @@
-package com.pject.sources;
+package com.pject.sources.parsing;
 
 import com.google.common.collect.Lists;
 import com.pject.helpers.LogFormatHelper;
+import com.pject.sources.Source;
 import com.pject.sources.helpers.ExpressionsHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.methods.CloseableHttpResponse;

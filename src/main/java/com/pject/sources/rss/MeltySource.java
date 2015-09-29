@@ -1,6 +1,7 @@
-package com.pject.sources;
+package com.pject.sources.rss;
 
 import com.google.common.collect.Lists;
+import com.pject.sources.Source;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
@@ -19,6 +20,7 @@ public class MeltySource extends RssSource implements Source {
 
     private static final String NAME = "melty";
 
+    private static final String ROOT = "http://www.melty.fr";
     private static final List<String> RSS = Lists.newArrayList("http://www.melty.fr/tele-realite-23.rss",
             "http://www.melty.fr/jeux-video-1.rss",
             "http://www.melty.fr/people-13.rss",
@@ -37,8 +39,8 @@ public class MeltySource extends RssSource implements Source {
     }
 
     @Override
-    String processLink(String link) {
-        return StringUtils.isNotEmpty(link.replace("http://www.melty.fr/", StringUtils.EMPTY)) ? link : null;
+    public String processLink(String link) {
+        return StringUtils.isNotEmpty(link.replace(ROOT, StringUtils.EMPTY)) || StringUtils.isNotEmpty(link.replace(ROOT + "/", StringUtils.EMPTY)) ? link : null;
     }
 
 }

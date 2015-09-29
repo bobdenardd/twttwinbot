@@ -1,9 +1,10 @@
-package com.pject.sources;
+package com.pject.sources.parsing;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Ordering;
 import com.google.common.primitives.Ints;
 import com.pject.helpers.LogFormatHelper;
+import com.pject.sources.Source;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;

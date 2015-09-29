@@ -1,6 +1,7 @@
-package com.pject.sources;
+package com.pject.sources.rss;
 
 import com.google.common.collect.Lists;
+import com.pject.sources.Source;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
@@ -35,7 +36,7 @@ public class ElleSource extends RssSource implements Source {
     }
 
     @Override
-    String processLink(String link) {
+    public String processLink(String link) {
         if(StringUtils.isNotEmpty(link)) {
             return StringUtils.isNotEmpty(link.replace("http://www.elle.fr", StringUtils.EMPTY)) ? link.replaceAll("#.*", StringUtils.EMPTY) : null;
         }

@@ -1,4 +1,4 @@
-package com.pject.sources;
+package com.pject.sources.rss;
 
 import com.google.common.collect.Lists;
 import com.pject.helpers.LogFormatHelper;
@@ -59,7 +59,7 @@ public abstract class RssSource {
         }
     }
 
-    abstract String processLink(String link);
+    protected abstract String processLink(String link);
 
     public String getTweet() {
         if(this.sources.size() > 0) {
