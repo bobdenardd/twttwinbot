@@ -1,9 +1,7 @@
 package com.pject.persistence;
 
-import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -16,7 +14,6 @@ import java.util.Properties;
  */
 public class Users {
 
-    private static final long TWO_WEEKS = 1000 * 60 *60 * 24 * 14;
     private Properties userProperties;
 
     public Users(Properties properties) {
@@ -42,20 +39,16 @@ public class Users {
         return false;
     }
 
-    public List<Long> getOldFollowed() {
-        List<Long> result = Lists.newArrayList();
-        long currentMillis = System.currentTimeMillis();
-        for(Map.Entry<Object, Object> entry : this.userProperties.entrySet()) {
-            try {
-                long millis = Long.parseLong(entry.getValue().toString().split("##")[1]);
-                if(currentMillis - millis >= TWO_WEEKS) {
-                    result.add((Long) entry.getKey());
-                }
-            } catch(Exception e) {
-                this.userProperties.remove(entry.getKey());
+    public void removeFollow(String user) {
+        String key = null;
+        for(Map.Entry entry : this.userProperties.entrySet()) {
+            if(entry.toString().startsWith(user)) {
+                key = entry.getKey().toString();
             }
         }
-        return result;
+        if(key != null) {
+            this.userProperties.remove(key);
+        }
     }
 
     public Properties getProperties() {

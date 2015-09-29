@@ -219,11 +219,13 @@ public class Bot implements BotSetup {
                     try {
                         if(! BotPropertiesHelper.getReadOnly()) {
                             this.twitter.destroyFriendship(userToUnfollow);
+                            String user = this.twitter.lookupUsers(new long[]{userToUnfollow}).get(0).getScreenName();
+                            this.users.removeFollow(user);
+                            if(LOGGER.isDebugEnabled()) {
+                                LOGGER.debug("Unfollowing " + user);
+                            }
                         }
                         StatsHelper.addUnfollowCount();
-                        if (LOGGER.isDebugEnabled()) {
-                            LOGGER.debug("Unfollowing " + this.twitter.lookupUsers(new long[]{userToUnfollow}).get(0).getScreenName());
-                        }
                     } catch(TwitterException e) {
                         ErrorHelper.addError(LogFormatHelper.formatExceptionMessage(e));
                         LOGGER.error("Could not unfollow user " + userToUnfollow + ": " + LogFormatHelper.formatExceptionMessage(e));
