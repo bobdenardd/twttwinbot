@@ -28,7 +28,7 @@ public class QuotesSource implements Source {
 
     private static final String QUOTES_FILE_NAME    = "citations.txt";
     private static final String REMOTE_ROOT_DBOX    = "/twttwinbot";
-    private static final int NB_QUOTES_TO_LOAD      = 20;
+    private static final int NB_QUOTES_TO_LOAD      = 50;
 
     private List<String> quotes = Lists.newArrayList();
 
@@ -70,7 +70,9 @@ public class QuotesSource implements Source {
     @Override
     public String getTweet() {
         if(this.quotes.size() > 0) {
-            return this.quotes.get(new Random().nextInt(this.quotes.size()));
+            String quote = this.quotes.get(new Random().nextInt(this.quotes.size()));
+            this.quotes.remove(quote);
+            return quote;
         }
         return null;
     }

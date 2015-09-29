@@ -50,10 +50,6 @@ public class SourcesHelper implements BotSetup {
         }
     }
 
-    public static boolean sourcesPresent() {
-        return sources != null && sources.size() > 0;
-    }
-
     public static String getTweet() {
         if(sources != null && sources.size() > 0) {
             int i = 0;
@@ -62,7 +58,7 @@ public class SourcesHelper implements BotSetup {
                 sourceTweet = sources.get(new Random().nextInt(sources.size())).getTweet();
                 i++;
             }
-            return sourceTweet;
+            return StringUtils.isNotEmpty(sourceTweet) && sourceTweet.length() <= 140 ? sourceTweet : null;
         }
         return null;
     }
@@ -93,6 +89,7 @@ public class SourcesHelper implements BotSetup {
         return null;
     }
 
+    // Only for testing purposes
     public static void main(String[] args) throws Exception{
         BotPropertiesHelper.init(new String[]{});
         DropBoxHelper.init(BotPropertiesHelper.getDropBoxToken());

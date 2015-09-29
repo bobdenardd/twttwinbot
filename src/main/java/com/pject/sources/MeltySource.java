@@ -39,7 +39,7 @@ public class MeltySource implements Source {
             "http://www.melty.fr/series-5.rss"
     );
 
-    private static final int MAX_MELTY_LINKS_PER_RSS = 15;
+    private static final int MAX_MELTY_LINKS_PER_RSS = 25;
 
     private List<String> sources = Lists.newArrayList();
 
@@ -48,7 +48,7 @@ public class MeltySource implements Source {
         for(String meltyRss : RSS) {
             processRss(meltyRss);
         }
-        LOGGER.info("Got " + this.sources + " sources");
+        LOGGER.info("Got " + this.sources.size() + " sources");
     }
 
     private void processRss(String rss) {
@@ -82,6 +82,7 @@ public class MeltySource implements Source {
     public String getTweet() {
         if(this.sources.size() > 0) {
             String meltyLink = this.sources.get(new Random().nextInt(this.sources.size()));
+            this.sources.remove(meltyLink);
             return StringUtils.trimToNull(ExpressionsHelper.getRandomEmojiedExpression() + " " + meltyLink);
         }
         return null;

@@ -65,6 +65,7 @@ public class ImgurSource implements Source {
     public String getTweet() {
         if(this.imgurLinks.size() > 0) {
             String imgurLink = this.imgurLinks.get(new Random().nextInt(this.imgurLinks.size()));
+            this.imgurLinks.remove(imgurLink);
             return StringUtils.trimToNull(ExpressionsHelper.getRandomEmojiedExpression() + " " + imgurLink);
         }
         return null;

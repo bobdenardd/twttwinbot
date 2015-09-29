@@ -32,7 +32,7 @@ public interface BotSetup {
     float FOLLOWED_TO_FOLLOWER_RATIO    = 0.25f;
 
     String SOURCES_PACKAGE              = "com.pject.sources";
-    int MAX_SOURCE_TRIES                = 4;
+    int MAX_SOURCE_TRIES                = 6;
 
     int REAL_TWEETS_BEGINING_MAX        = 4;
     int REAL_TWEETS_BEGINNING_MIN       = 2;

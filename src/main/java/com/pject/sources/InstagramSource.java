@@ -40,7 +40,7 @@ public class InstagramSource implements Source {
             "http://www.hashtagig.com/analytics/beautiful"
     );
 
-    private static final int MAX_INSTAS_PER_TAG = 25;
+    private static final int MAX_INSTAS_PER_TAG = 35;
 
     private List<String> sources = Lists.newArrayList();
 
@@ -135,7 +135,9 @@ public class InstagramSource implements Source {
     @Override
     public String getTweet() {
         if(this.sources.size() > 0) {
-            return this.sources.get(new Random().nextInt(this.sources.size()));
+            String source =  this.sources.get(new Random().nextInt(this.sources.size()));
+            this.sources.remove(source);
+            return source;
         }
         return null;
     }
