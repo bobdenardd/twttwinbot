@@ -37,6 +37,7 @@ public class Main {
                     BotPropertiesHelper.getAccessToken(),
                     BotPropertiesHelper.getAccessTokenSecret(),
                     BotPropertiesHelper.getDropBoxToken());
+            bot.init();
         } catch (BotInitPropertiesException|BotInitTwitterException e) {
             LOGGER.error("Could not initialize bot: " + LogFormatHelper.formatExceptionMessage(e));
             System.exit(1);

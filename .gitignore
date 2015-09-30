@@ -49,5 +49,6 @@ Icon?
 ehthumbs.db
 Thumbs.db
 *~
-#*.dat
+tweets.dat
+users.dat
 

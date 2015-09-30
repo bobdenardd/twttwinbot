@@ -25,5 +25,4 @@ public class PunchlinesSource extends FileSource implements Source {
         LOGGER.info("Got " + this.sources.size() + " sources");
     }
 
-
 }

@@ -63,7 +63,9 @@ public class Bot implements BotSetup {
         } catch(TwitterException e) {
             throw new BotInitTwitterException("Could not init twitter client: " + e.getMessage());
         }
+    }
 
+    public void init() {
         // Initializing bot dropbox helpers
         initDropBox();
 
