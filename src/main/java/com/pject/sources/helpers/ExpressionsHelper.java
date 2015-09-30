@@ -50,8 +50,8 @@ public class ExpressionsHelper implements TeenageExpressions {
     }
 
     private static String getSwaggmaned(String expression) {
-        return StringUtils.isNotEmpty(expression) && expression.endsWith("é") && RANDOM.nextBoolean() ?
-                replaceLast(expression, "é", "ey") : expression;
+        return StringUtils.isNotEmpty(expression) && expression.endsWith("Ã©") && RANDOM.nextBoolean() ?
+                replaceLast(expression, "Ã©", "ey") : expression;
     }
 
     // Ugly shit from stackoverflow, ain't time for this
