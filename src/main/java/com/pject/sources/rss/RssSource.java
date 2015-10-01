@@ -14,6 +14,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.parser.Parser;
+import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.util.List;
@@ -42,11 +43,14 @@ public abstract class RssSource {
                 String raw = EntityUtils.toString(response.getEntity());
                 Document doc = Jsoup.parse(raw, StringUtils.EMPTY, Parser.xmlParser());
                 int i = 0;
-                for(Element element : doc.select("link")) {
+                for(Element element : doc.select("item")) {
                     if(i < maxSourcePerRss) {
-                        String processedLink = processLink(element.text());
-                        if(StringUtils.isNotEmpty(processedLink)) {
-                            this.sources.add(processedLink);
+                        Elements links = element.select("link");
+                        if(links != null && links.size() > 0) {
+                            String processedLink = processLink(links.get(0).text());
+                            if (StringUtils.isNotEmpty(processedLink)) {
+                                this.sources.add(processedLink);
+                            }
                         }
                     } else {
                         break;

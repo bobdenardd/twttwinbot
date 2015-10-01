@@ -246,7 +246,7 @@ public class Bot implements BotSetup {
             if(StringUtils.isNotEmpty(message)) {
                 try {
                     TwitterProxy.tweet(this.twitter, message);
-                    StatsHelper.addReadTweetCount();
+                    StatsHelper.addRealTweetCount();
                 } catch(TwitterException|NoRemainingException e) {
                     LOGGER.error("Could not tweet real status " + message + ": " + LogFormatHelper.formatExceptionMessage(e));
                 }
