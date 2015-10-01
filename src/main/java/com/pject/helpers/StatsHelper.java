@@ -21,6 +21,7 @@ public class StatsHelper implements BotSetup {
     private static int numberOfRetweets     = 0;
     private static int numberOfFollows      = 0;
     private static int numberOfUnfollows    = 0;
+    private static int numberOfRealTweets   = 0;
 
     public static void addRetweetCount() {
         numberOfRetweets++;
@@ -34,16 +35,19 @@ public class StatsHelper implements BotSetup {
         numberOfUnfollows++;
     }
 
+    public static void addRealTweetCount() {
+        numberOfRealTweets++;
+    }
+
     public static void dumpStats() {
         if(! BotPropertiesHelper.getReadOnly()) {
-            try {
-                File statsFile = new File("errors-" + DATE_FORMAT.format(new Date()) + ".txt");
-                statsFile.deleteOnExit();
-                PrintWriter writer = new PrintWriter(statsFile);
-                writer.println("Number of retweets:  " + numberOfRetweets);
-                writer.println("Number of follows:   " + numberOfFollows);
-                writer.println("Number of unfollows: " + numberOfUnfollows);
-                writer.close();
+            File statsFile = new File("stats-" + DATE_FORMAT.format(new Date()) + ".txt");
+            statsFile.deleteOnExit();
+            try (PrintWriter writer = new PrintWriter(statsFile)){
+                writer.println("Number of retweets:    " + numberOfRetweets);
+                writer.println("Number of follows:     " + numberOfFollows);
+                writer.println("Number of unfollows:   " + numberOfUnfollows);
+                writer.println("Number of real tweets: " + numberOfRealTweets);
                 DropBoxHelper.uploadFile(DropBoxHelper.getRemoteFile(REMOTE_ROOT_DBOX, BotPropertiesHelper.getBotUniqueId(), statsFile.getName()), statsFile);
             } catch (Exception e) {
                 LOGGER.warn("Could not dump errors file", e);
