@@ -48,6 +48,7 @@ public class StatsHelper implements BotSetup {
                 writer.println("Number of follows:     " + numberOfFollows);
                 writer.println("Number of unfollows:   " + numberOfUnfollows);
                 writer.println("Number of real tweets: " + numberOfRealTweets);
+                writer.flush();
                 DropBoxHelper.uploadFile(DropBoxHelper.getRemoteFile(REMOTE_ROOT_DBOX, BotPropertiesHelper.getBotUniqueId(), statsFile.getName()), statsFile);
             } catch (Exception e) {
                 LOGGER.warn("Could not dump errors file", e);
