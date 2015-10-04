@@ -81,8 +81,8 @@ public class InstagramSource implements Source {
 
                     // Building source
                     String source = mergeTagsWithPicture(imageUrl, hashtags);
-                    if(StringUtils.isNotEmpty(source)) {
-                        this.sources.add(source);
+                    if(source != null &&StringUtils.isNotEmpty(source)) {
+                        this.sources.add(source.replace("s150x150", "510x510"));
                         i++;
                     }
                 }
