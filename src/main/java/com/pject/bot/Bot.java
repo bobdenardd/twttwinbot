@@ -203,6 +203,7 @@ public class Bot implements BotSetup {
             int areFollowedNumber = botUser.getFriendsCount();
             float currentRatio = (float) myFollowersNumber / (float) areFollowedNumber;
             int neededUnfollows = (int) ((FOLLOWED_TO_FOLLOWER_RATIO * (float) areFollowedNumber - (float) myFollowersNumber) / FOLLOWED_TO_FOLLOWER_RATIO);
+            StatsHelper.addUnfollowInfo(currentRatio, myFollowersNumber, areFollowedNumber);
             if(LOGGER.isDebugEnabled()) {
                 LOGGER.debug("followers: " + myFollowersNumber + " followed: " + areFollowedNumber + " current ratio: " + currentRatio);
             }
