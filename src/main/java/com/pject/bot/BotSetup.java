@@ -31,6 +31,7 @@ public interface BotSetup {
     int MAX_TWEETS_RESULTS              = 100;
 
     int MAX_UNFOLLOWS_PER_RUN           = 8;
+    int MIN_FOLLOWED_BEFORE_UNFOLLOW    = 500;
     float FOLLOWED_TO_FOLLOWER_RATIO    = 0.25f;
 
     String SOURCES_PACKAGE              = "com.pject.sources";

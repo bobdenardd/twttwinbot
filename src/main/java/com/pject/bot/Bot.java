@@ -208,7 +208,7 @@ public class Bot implements BotSetup {
             }
 
             // Checking if unfollowing is needed
-            if(currentRatio < FOLLOWED_TO_FOLLOWER_RATIO && neededUnfollows > MAX_UNFOLLOWS_PER_RUN) {
+            if(currentRatio < FOLLOWED_TO_FOLLOWER_RATIO && neededUnfollows > MAX_UNFOLLOWS_PER_RUN && areFollowedNumber > MIN_FOLLOWED_BEFORE_UNFOLLOW) {
                 List<Long> userIds = Lists.newArrayList();
                 long cursor = -1;
                 IDs ids;
