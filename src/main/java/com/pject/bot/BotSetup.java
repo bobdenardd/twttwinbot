@@ -28,7 +28,7 @@ public interface BotSetup {
 
     String SEARCH_QUERY                 = "concours OR gagner";
 
-    int MAX_UNFOLLOWS_PER_RUN           = 5;
+    int MAX_UNFOLLOWS_PER_RUN           = 8;
     float FOLLOWED_TO_FOLLOWER_RATIO    = 0.25f;
 
     String SOURCES_PACKAGE              = "com.pject.sources";
