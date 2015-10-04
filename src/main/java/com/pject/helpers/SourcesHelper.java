@@ -99,6 +99,8 @@ public class SourcesHelper implements BotSetup {
         for(int i = 0; i < 140; i++) {
             System.out.println(getTweet());
         }
+
+        StatsHelper.dumpStats();
     }
 
 }

@@ -1,6 +1,7 @@
 package com.pject.sources.rss;
 
 import com.google.common.collect.Lists;
+import com.pject.helpers.StatsHelper;
 import com.pject.sources.Source;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -32,9 +33,11 @@ public class MeltySource extends RssSource implements Source {
 
     public MeltySource() {
         LOGGER.info("Initializing melty source");
+        long start = System.currentTimeMillis();
         for(String meltyRss : RSS) {
             processRss(meltyRss, MAX_MELTY_LINKS_PER_RSS);
         }
+        StatsHelper.registerSource(NAME, System.currentTimeMillis() - start, this.sources.size());
         LOGGER.info("Got " + this.sources.size() + " sources");
     }
 

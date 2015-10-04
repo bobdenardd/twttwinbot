@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Ordering;
 import com.google.common.primitives.Ints;
 import com.pject.helpers.LogFormatHelper;
+import com.pject.helpers.StatsHelper;
 import com.pject.sources.Source;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -47,9 +48,11 @@ public class InstagramSource implements Source {
 
     public InstagramSource() {
         LOGGER.info("Initializing instagram source");
+        long start = System.currentTimeMillis();
         for(String instaUrl : INSTA_URLS) {
             processHashTag(instaUrl);
         }
+        StatsHelper.registerSource(NAME, System.currentTimeMillis() - start, this.sources.size());
         LOGGER.info("Got " + this.sources.size() + " sources");
     }
 

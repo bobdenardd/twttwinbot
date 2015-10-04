@@ -1,5 +1,6 @@
 package com.pject.sources.file;
 
+import com.pject.helpers.StatsHelper;
 import com.pject.sources.Source;
 import org.apache.log4j.Logger;
 
@@ -21,7 +22,9 @@ public class PunchlinesSource extends FileSource implements Source {
 
     public PunchlinesSource() {
         LOGGER.info("Initializing the punchlines source");
+        Long start = System.currentTimeMillis();
         downAndLoadQuotes(PUNCHLINES_FILE_NAME, NB_PUNCHLINES_TO_LOAD);
+        StatsHelper.registerSource(NAME, System.currentTimeMillis() - start, this.sources.size());
         LOGGER.info("Got " + this.sources.size() + " sources");
     }
 

@@ -2,7 +2,9 @@ package com.pject.sources.parsing;
 
 import com.google.common.collect.Lists;
 import com.pject.helpers.LogFormatHelper;
+import com.pject.helpers.StatsHelper;
 import com.pject.sources.Source;
+import com.pject.sources.helpers.LinkShortenerHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -44,19 +46,29 @@ public class SoundcloudSource implements Source {
             "tbd-fest-2015-playlist",
             "the-best-of-august-2015");
 
-    private static final int MAX_TRACKS = 100;
+    private static final List<String> PREFIXES = Lists.newArrayList("j'écoute", "listening", "ecoute", "écoute", "bon son", "zik", "track",
+            "la melodie...", "du beat", "beeatz", "je vibre");
 
+    private static final int MAX_TRACKS = 100;
+    private static final int MAX_COMMENTS = 100;
+
+    private List<String> liveComments = Lists.newArrayList();
     private List<String> sources = Lists.newArrayList();
 
     public SoundcloudSource() {
         Collections.shuffle(SETS);
         LOGGER.info("Starting the soundcloud source");
+        long start = System.currentTimeMillis();
         for(String set : SETS) {
             processSet(set);
             if(this.sources.size() > MAX_TRACKS) {
                 break;
             }
         }
+        // Mixing up comments
+        this.liveComments.addAll(PREFIXES);
+        Collections.shuffle(this.liveComments);
+        StatsHelper.registerSource(NAME, System.currentTimeMillis() - start, this.sources.size());
         LOGGER.info("Got " + this.sources.size() + " sources");
     }
 
@@ -68,9 +80,13 @@ public class SoundcloudSource implements Source {
                 JSONArray tracks = new JSONObject(raw).getJSONArray("tracks");
                 for(int i = 0; i < tracks.length(); i++) {
                     if("public".equals(tracks.getJSONObject(i).getString("sharing"))) {
-                        String trackUrl = getFullSoundCloudLink(tracks.getJSONObject(i).getString("id"));
+                        String trackId = tracks.getJSONObject(i).getString("id");
+                        String trackUrl = getFullSoundCloudLink(trackId);
                         if(StringUtils.isNotEmpty(trackUrl)) {
                             this.sources.add(trackUrl);
+                            if(this.liveComments.size() < MAX_COMMENTS) {
+                                getCommentsForTrack(trackId);
+                            }
                         }
                     }
                 }
@@ -92,12 +108,45 @@ public class SoundcloudSource implements Source {
         return null;
     }
 
+    private void getCommentsForTrack(String trackId) {
+        HttpGet httpGet = new HttpGet("http://api.soundcloud.com/tracks/" + trackId + "/comments?client_id=" + CLIENTID);
+        try (CloseableHttpClient httpclient = HttpClients.createDefault(); CloseableHttpResponse response = httpclient.execute(httpGet)){
+            if(response.getStatusLine().getStatusCode() == 200) {
+                String raw = EntityUtils.toString(response.getEntity());
+                JSONArray comments = new JSONArray(raw);
+                for(int i = 0; i < comments.length(); i++) {
+                    if("comment".equals(comments.getJSONObject(i).get("kind"))) {
+                        this.liveComments.add(comments.getJSONObject(i).getString("body"));
+                    }
+                }
+            }
+        } catch(IOException| JSONException e) {
+            LOGGER.error("Could not load soundcloud comments: " + LogFormatHelper.formatExceptionMessage(e));
+        }
+    }
+
+    private String getCommentForSize(int maxSize) {
+        String foundComment = null;
+        for(String comment : this.liveComments) {
+            if(comment.length() < maxSize) {
+                foundComment = comment;
+                break;
+            }
+        }
+        if(foundComment != null) {
+            this.liveComments.remove(foundComment);
+        }
+        return foundComment;
+    }
+
     @Override
     public String getTweet() {
         if(this.sources.size() > 0) {
-            String source =  this.sources.get(new Random().nextInt(this.sources.size()));
+            String source = this.sources.get(new Random().nextInt(this.sources.size()));
             this.sources.remove(source);
-            return source;
+            // Building it up
+            String link = LinkShortenerHelper.shorten(source);
+            return getCommentForSize(139 - link.length()) + " " + link;
         }
         return null;
     }
