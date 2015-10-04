@@ -2,6 +2,7 @@ package com.pject.sources.rss;
 
 import com.google.common.collect.Lists;
 import com.pject.helpers.LogFormatHelper;
+import com.pject.sources.Source;
 import com.pject.sources.helpers.ExpressionsHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -18,7 +19,6 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Random;
 
 /**
  * RssSource - Short description of the class
@@ -27,9 +27,11 @@ import java.util.Random;
  *         Last: 29/09/2015 21:54
  * @version $Id$
  */
-public abstract class RssSource {
+public abstract class RssSource implements Source {
 
     private static final Logger LOGGER = Logger.getLogger(RssSource.class);
+
+    private static final String NAME = StringUtils.EMPTY;
 
     protected List<String> sources = Lists.newArrayList();
 
@@ -67,7 +69,7 @@ public abstract class RssSource {
 
     public String getTweet() {
         if(this.sources.size() > 0) {
-            String rssLink = this.sources.get(new Random().nextInt(this.sources.size()));
+            String rssLink = this.sources.get(RANDOM.nextInt(this.sources.size()));
             this.sources.remove(rssLink);
             return StringUtils.trimToNull(ExpressionsHelper.getRandomEmojiedExpression() + " " + rssLink);
         }

@@ -2,6 +2,7 @@ package com.pject.sources.helpers;
 
 import org.apache.commons.lang3.StringUtils;
 
+import java.security.SecureRandom;
 import java.util.Random;
 
 /**
@@ -13,7 +14,7 @@ import java.util.Random;
  */
 public class ExpressionsHelper implements TeenageExpressions {
 
-    private static final Random RANDOM  = new Random();
+    private static final Random RANDOM  = new SecureRandom();
     private static final int MAX_EMOJIS = 3;
     private static final String SPACE   = " ";
 

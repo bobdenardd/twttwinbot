@@ -26,6 +26,7 @@ import twitter4j.TwitterFactory;
 import twitter4j.User;
 import twitter4j.conf.ConfigurationBuilder;
 
+import java.security.SecureRandom;
 import java.util.List;
 
 /**
@@ -92,8 +93,14 @@ public class Bot implements BotSetup {
         tweetReal(REAL_TWEETS_BEGINNING_MIN + RANDOM.nextInt(REAL_TWEETS_BEGINING_MAX - REAL_TWEETS_BEGINNING_MIN));
 
         // Handling new tweets
+        List<Integer> realTweetsOffsets = getMiddleOffsets(MAX_TWEETS_RESULTS, REAL_TWEETS_MIDDLE_MIN, REAL_TWEETS_MIDDLE_MAX);
+        int index = 0;
         for (Status status : result) {
             processTweet(status);
+            if(realTweetsOffsets.contains(index)) {
+                tweetReal(1);
+            }
+            index++;
         }
 
         // Real tweets at the end of the run
@@ -107,7 +114,7 @@ public class Bot implements BotSetup {
         LOGGER.info("Searching for tweets using query: " + SEARCH_QUERY);
         List<Status> result = Lists.newArrayList();
         Query query = new Query(SEARCH_QUERY);
-        query.setCount(100);
+        query.setCount(MAX_TWEETS_RESULTS);
 
         try {
             QueryResult results = TwitterProxy.search(twitter, query);
@@ -261,6 +268,19 @@ public class Bot implements BotSetup {
             index++;
         }
         return status;
+    }
+
+    private List<Integer> getMiddleOffsets(int totalNumber, int numberInBetweenMin, int numberInBetweenMax) {
+        List<Integer> result = Lists.newArrayList();
+        int numberInBetween = numberInBetweenMin + new SecureRandom().nextInt(numberInBetweenMax - numberInBetweenMin);
+        int interval = totalNumber / numberInBetween;
+        int index = 0;
+        while(index < totalNumber) {
+            int offset = index + new SecureRandom().nextInt(interval);
+            result.add(offset);
+            index += interval;
+        }
+        return result;
     }
 
     private void initTwitter() throws TwitterException {

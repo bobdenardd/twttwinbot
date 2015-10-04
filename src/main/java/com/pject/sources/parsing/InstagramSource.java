@@ -20,7 +20,6 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Random;
 
 /**
  * InstagramSource - Short description of the class
@@ -139,7 +138,7 @@ public class InstagramSource implements Source {
     @Override
     public String getTweet() {
         if(this.sources.size() > 0) {
-            String source =  this.sources.get(new Random().nextInt(this.sources.size()));
+            String source =  this.sources.get(RANDOM.nextInt(this.sources.size()));
             this.sources.remove(source);
             return source;
         }

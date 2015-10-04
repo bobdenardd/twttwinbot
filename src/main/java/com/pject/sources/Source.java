@@ -2,6 +2,9 @@ package com.pject.sources;
 
 import org.apache.commons.lang3.StringUtils;
 
+import java.security.SecureRandom;
+import java.util.Random;
+
 /**
  * Source - Short description of the class
  *
@@ -12,6 +15,8 @@ import org.apache.commons.lang3.StringUtils;
 public interface Source {
 
     String NAME = StringUtils.EMPTY;
+
+    Random RANDOM = new SecureRandom();
 
     String getTweet();
 

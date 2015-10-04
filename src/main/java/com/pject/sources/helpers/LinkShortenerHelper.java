@@ -14,7 +14,7 @@ import twitter4j.JSONException;
 import twitter4j.JSONObject;
 
 import java.io.IOException;
-import java.util.Random;
+import java.security.SecureRandom;
 
 /**
  * LinkShortenerHelper - Short description of the class
@@ -34,7 +34,7 @@ public class LinkShortenerHelper {
     private static final BitlyClient CLIENT = new BitlyClient(BITLY_KEY);
 
     public static String shorten(String toShorten) {
-        switch (new Random().nextInt(2)) {
+        switch (new SecureRandom().nextInt(2)) {
             case 0:
                 return googleShorten(toShorten);
             default:

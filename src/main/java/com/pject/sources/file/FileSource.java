@@ -3,6 +3,7 @@ package com.pject.sources.file;
 import com.google.common.collect.Lists;
 import com.pject.helpers.DropBoxHelper;
 import com.pject.helpers.LogFormatHelper;
+import com.pject.sources.Source;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
@@ -10,8 +11,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.LineNumberReader;
+import java.security.SecureRandom;
 import java.util.List;
-import java.util.Random;
 
 /**
  * FileSource - Short description of the class
@@ -20,9 +21,11 @@ import java.util.Random;
  *         Last: 29/09/2015 17:18
  * @version $Id$
  */
-public abstract class FileSource {
+public abstract class FileSource implements Source {
 
     private static final Logger LOGGER = Logger.getLogger(FileSource.class);
+
+    private static final String NAME = StringUtils.EMPTY;
 
     private static final String REMOTE_ROOT_DBOX    = "/twttwinbot";
 
@@ -41,7 +44,7 @@ public abstract class FileSource {
                     String line;
                     int counter = 0;
                     while((line = bufferedReader.readLine()) != null) {
-                        if(counter == new Random().nextInt(totalQuotesNumber)) {
+                        if(counter == RANDOM.nextInt(totalQuotesNumber)) {
                             if(StringUtils.isNotEmpty(line)) {
                                 this.sources.add(line);
                             }
@@ -57,7 +60,7 @@ public abstract class FileSource {
 
     public String getTweet() {
         if(this.sources.size() > 0) {
-            String quote = this.sources.get(new Random().nextInt(this.sources.size()));
+            String quote = this.sources.get(new SecureRandom().nextInt(this.sources.size()));
             this.sources.remove(quote);
             return quote;
         }

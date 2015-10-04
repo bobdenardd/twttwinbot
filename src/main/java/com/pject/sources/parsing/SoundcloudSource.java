@@ -19,7 +19,6 @@ import twitter4j.JSONObject;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 
 /**
  * SoundcloudSource - Short description of the class
@@ -142,7 +141,7 @@ public class SoundcloudSource implements Source {
     @Override
     public String getTweet() {
         if(this.sources.size() > 0) {
-            String source = this.sources.get(new Random().nextInt(this.sources.size()));
+            String source = this.sources.get(RANDOM.nextInt(this.sources.size()));
             this.sources.remove(source);
             // Building it up
             String link = LinkShortenerHelper.shorten(source);

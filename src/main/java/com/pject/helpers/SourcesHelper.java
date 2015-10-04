@@ -10,8 +10,8 @@ import org.apache.log4j.Logger;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.security.SecureRandom;
 import java.util.List;
-import java.util.Random;
 
 /**
  * SourcesHelper - Short description of the class
@@ -53,9 +53,9 @@ public class SourcesHelper implements BotSetup {
     public static String getTweet() {
         if(sources != null && sources.size() > 0) {
             int i = 0;
-            String sourceTweet = sources.get(new Random().nextInt(sources.size())).getTweet();
+            String sourceTweet = sources.get(new SecureRandom().nextInt(sources.size())).getTweet();
             while(StringUtils.isEmpty(sourceTweet) && i < MAX_SOURCE_TRIES) {
-                sourceTweet = sources.get(new Random().nextInt(sources.size())).getTweet();
+                sourceTweet = sources.get(new SecureRandom().nextInt(sources.size())).getTweet();
                 i++;
             }
             return StringUtils.isNotEmpty(sourceTweet) && sourceTweet.length() <= 140 ? sourceTweet : null;
