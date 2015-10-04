@@ -89,18 +89,4 @@ public class SourcesHelper implements BotSetup {
         return null;
     }
 
-    // Only for testing purposes, will go away
-    public static void main(String[] args) throws Exception{
-        BotPropertiesHelper.init(new String[]{});
-        DropBoxHelper.init(BotPropertiesHelper.getDropBoxToken());
-        init();
-
-        // Triying out the sources
-        for(int i = 0; i < 140; i++) {
-            System.out.println(getTweet());
-        }
-
-        StatsHelper.dumpStats();
-    }
-
 }
