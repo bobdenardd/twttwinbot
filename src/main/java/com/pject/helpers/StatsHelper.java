@@ -52,7 +52,7 @@ public class StatsHelper implements BotSetup {
     public static void dumpStats() {
         if(! BotPropertiesHelper.getReadOnly()) {
             File statsFile = new File("stats-" + DATE_FORMAT.format(new Date()) + ".txt");
-            //statsFile.deleteOnExit();
+            statsFile.deleteOnExit();
             try (PrintWriter writer = new PrintWriter(statsFile)){
                 writer.println("Registered sources: " + sourcesLoadTime.size());
                 for(Map.Entry<String, Integer> entry : sourcesNumbers.entrySet()) {
