@@ -1,6 +1,8 @@
 package com.pject.sources.helpers;
 
 import com.pject.helpers.LogFormatHelper;
+import net.swisstech.bitly.BitlyClient;
+import net.swisstech.bitly.model.Response;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
@@ -12,6 +14,7 @@ import twitter4j.JSONException;
 import twitter4j.JSONObject;
 
 import java.io.IOException;
+import java.util.Random;
 
 /**
  * LinkShortenerHelper - Short description of the class
@@ -27,8 +30,16 @@ public class LinkShortenerHelper {
     private static final String SHORTENER_GOOGLE_KEY = "AIzaSyB5GOtm_qwdiDQYERaFJv-TooyKTPztDeY";
     private static final String SHORTENER_GOOGLE_URL = "https://www.googleapis.com/urlshortener/v1/url?key=" + SHORTENER_GOOGLE_KEY;
 
+    private static final String BITLY_KEY   = "2857fb7696bae0aeaa41e3767b89cb4f2c69ab64";
+    private static final BitlyClient CLIENT = new BitlyClient(BITLY_KEY);
+
     public static String shorten(String toShorten) {
-        return googleShorten(toShorten);
+        switch (new Random().nextInt(2)) {
+            case 0:
+                return googleShorten(toShorten);
+            default:
+                return bitlyShorten(toShorten);
+        }
     }
 
     private static String googleShorten(String toShorten) {
@@ -42,6 +53,18 @@ public class LinkShortenerHelper {
             }
         } catch(IOException|JSONException e) {
             LOGGER.error("Could not google shorten " + toShorten + ": " + LogFormatHelper.formatExceptionMessage(e));
+        }
+        return toShorten;
+    }
+
+    private static String bitlyShorten(String toShorten) {
+        Response respShort = CLIENT.shorten()
+                .setLongUrl(toShorten)
+                .call();
+        try {
+            return new JSONObject(respShort.data.toString()).getString("url");
+        } catch(Exception e) {
+            LOGGER.error("Could not bitly shorten " + toShorten + ": " + LogFormatHelper.formatExceptionMessage(e));
         }
         return toShorten;
     }
