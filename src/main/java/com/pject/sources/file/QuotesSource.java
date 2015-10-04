@@ -1,5 +1,6 @@
 package com.pject.sources.file;
 
+import com.pject.helpers.StatsHelper;
 import com.pject.sources.Source;
 import org.apache.log4j.Logger;
 
@@ -21,7 +22,9 @@ public class QuotesSource extends FileSource implements Source {
 
     public QuotesSource() {
         LOGGER.info("Initializing the quotes source");
+        Long start = System.currentTimeMillis();
         downAndLoadQuotes(QUOTES_FILE_NAME, NB_QUOTES_TO_LOAD);
+        StatsHelper.registerSource(NAME, System.currentTimeMillis() - start, this.sources.size());
         LOGGER.info("Got " + this.sources.size() + " sources");
     }
 

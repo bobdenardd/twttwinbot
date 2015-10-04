@@ -1,6 +1,7 @@
 package com.pject.sources.rss;
 
 import com.google.common.collect.Lists;
+import com.pject.helpers.StatsHelper;
 import com.pject.sources.Source;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -29,9 +30,11 @@ public class ElleSource extends RssSource implements Source {
 
     public ElleSource() {
         LOGGER.info("Initializing elle source");
+        long start = System.currentTimeMillis();
         for(String rss : RSS) {
             processRss(rss, MAX_PER_RSS);
         }
+        StatsHelper.registerSource(NAME, System.currentTimeMillis() - start, this.sources.size());
         LOGGER.info("Got " + this.sources.size() + " sources");
     }
 

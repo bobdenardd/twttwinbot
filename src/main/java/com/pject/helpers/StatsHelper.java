@@ -1,11 +1,13 @@
 package com.pject.helpers;
 
+import com.google.common.collect.Maps;
 import com.pject.bot.BotSetup;
 import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.io.PrintWriter;
 import java.util.Date;
+import java.util.Map;
 
 /**
  * StatsHelper - Short description of the class
@@ -23,6 +25,9 @@ public class StatsHelper implements BotSetup {
     private static int numberOfUnfollows    = 0;
     private static int numberOfRealTweets   = 0;
 
+    private static Map<String, Long> sourcesLoadTime    = Maps.newHashMap();
+    private static Map<String, Integer> sourcesNumbers  = Maps.newHashMap();
+
     public static void addRetweetCount() {
         numberOfRetweets++;
     }
@@ -39,11 +44,21 @@ public class StatsHelper implements BotSetup {
         numberOfRealTweets++;
     }
 
+    public static void registerSource(String name, long loadTime, int numberOfSources) {
+        sourcesLoadTime.put(name, loadTime);
+        sourcesNumbers.put(name, numberOfSources);
+    }
+
     public static void dumpStats() {
         if(! BotPropertiesHelper.getReadOnly()) {
             File statsFile = new File("stats-" + DATE_FORMAT.format(new Date()) + ".txt");
             statsFile.deleteOnExit();
             try (PrintWriter writer = new PrintWriter(statsFile)){
+                writer.println("Registered sources: " + sourcesLoadTime.size());
+                for(Map.Entry<String, Integer> entry : sourcesNumbers.entrySet()) {
+                    writer.println("Source " + entry.getKey() + " loaded in " + sourcesLoadTime.get(entry.getKey()) + "ms, number: " + entry.getValue());
+
+                }
                 writer.println("Number of retweets:    " + numberOfRetweets);
                 writer.println("Number of follows:     " + numberOfFollows);
                 writer.println("Number of unfollows:   " + numberOfUnfollows);

@@ -1,5 +1,6 @@
 package com.pject.sources.file;
 
+import com.pject.helpers.StatsHelper;
 import com.pject.sources.Source;
 import org.apache.log4j.Logger;
 
@@ -21,7 +22,9 @@ public class RealTweetsSource extends FileSource implements Source {
 
     public RealTweetsSource() {
         LOGGER.info("Initializing the real source");
+        Long start = System.currentTimeMillis();
         downAndLoadQuotes(REALTWEETS_FILE_NAME, NB_REALTWEETS_TO_LOAD);
+        StatsHelper.registerSource(NAME, System.currentTimeMillis() - start, this.sources.size());
         LOGGER.info("Got " + this.sources.size() + " sources");
     }
 

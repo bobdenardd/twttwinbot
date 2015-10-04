@@ -1,5 +1,6 @@
 package com.pject.sources.rss;
 
+import com.pject.helpers.StatsHelper;
 import com.pject.sources.file.PunchlinesSource;
 import com.pject.sources.Source;
 import org.apache.commons.lang3.StringUtils;
@@ -24,7 +25,9 @@ public class PuretrendSource extends RssSource implements Source {
 
     public PuretrendSource() {
         LOGGER.info("Initializing puretrend source");
+        long start = System.currentTimeMillis();
         processRss(RSS, MAX_RSS);
+        StatsHelper.registerSource(NAME, System.currentTimeMillis() - start, this.sources.size());
         LOGGER.info("Got " + this.sources.size() + " sources");
     }
 

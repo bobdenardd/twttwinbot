@@ -2,6 +2,7 @@ package com.pject.sources.parsing;
 
 import com.google.common.collect.Lists;
 import com.pject.helpers.LogFormatHelper;
+import com.pject.helpers.StatsHelper;
 import com.pject.sources.Source;
 import com.pject.sources.helpers.ExpressionsHelper;
 import org.apache.commons.lang3.StringUtils;
@@ -40,6 +41,7 @@ public class ImgurSource implements Source {
 
     public ImgurSource() {
         LOGGER.info("Initializing the imgur source");
+        long start = System.currentTimeMillis();
         HttpGet httpGet = new HttpGet(IMGUR_TRENDING_URL);
         try (CloseableHttpClient httpclient = HttpClients.createDefault(); CloseableHttpResponse response = httpclient.execute(httpGet)){
             if(response.getStatusLine().getStatusCode() == 200) {
@@ -59,6 +61,7 @@ public class ImgurSource implements Source {
         } catch(IOException e) {
             LOGGER.error("Could not load imgur links: " + LogFormatHelper.formatExceptionMessage(e));
         }
+        StatsHelper.registerSource(NAME, System.currentTimeMillis() - start, this.imgurLinks.size());
         LOGGER.info("Got " + this.imgurLinks.size() + " sources");
     }
 
