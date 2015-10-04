@@ -18,6 +18,7 @@ public interface TeenageExpressions {
             "déclassé",
             "dar",
             "xlol",
+            "lol",
             "amazing",
             "wow",
             "wtf",
@@ -27,6 +28,7 @@ public interface TeenageExpressions {
             "swagg",
             "classe",
             "clazz",
+            "la class",
             "a voir",
             "bon ice",
             "calé",
@@ -47,26 +49,21 @@ public interface TeenageExpressions {
             "gavé",
             "le kiff",
             "mortel",
-            "zarbi");
+            "zarbi",
+            "cheap",
+            "bordelik",
+            "allumé",
+            "accepté",
+            "accordé",
+            "distingué");
 
-    List<String> PREFIXES = Lists.newArrayList("archi", "trop", "top", "ultra", "mega", "méga", "tiptop");
+    List<String> PREFIXES = Lists.newArrayList("archi", "trop", "top", "ultra", "mega", "méga", "tiptop", "bien");
 
-    List<String> EMOJIS = Lists.newArrayList("\uD83D\uDE0D",
-            "\uD83D\uDE03",
-            "\uD83D\uDC40",
-            "\uD83D\uDC9B",
-            "\uD83D\uDC99",
-            "\uD83D\uDC9C",
-            "\uD83D\uDC9A",
-            "❤",
-            "\uD83D\uDC97",
-            "\uD83C\uDF1D",
-            "\uD83D\uDD1E",
-            "❔",
-            "❓",
-            "❗",
-            "‼",
-            "⁉",
-            "♥");
+    List<String> EMOJIS = Lists.newArrayList("\uD83D\uDE0D", "\uD83D\uDE03", "\uD83D\uDC40", "\uD83D\uDC9B", "\uD83D\uDC99",
+            "\uD83D\uDC9C", "\uD83D\uDC9A", "❤", "\uD83D\uDC97", "\uD83C\uDF1D", "\uD83D\uDD1E", "❔", "❓", "❗", "‼", "⁉", "♥",
+            "©", "⛔", "\uD83D\uDEBA","\uD83C\uDD92","♨","\uD83C\uDFAD","\uD83D\uDD05","\uD83D\uDC9D","\uD83C\uDF8E","\uD83D\uDC2D",
+            "⭐","☀","⚡","\uD83C\uDF1E","\uD83D\uDC44","\uD83D\uDE3B","\uD83D\uDE0D","\uD83D\uDE1A","\uD83D\uDE1D","\uD83D\uDE1B","\uD83D\uDE05",
+            "\uD83D\uDC4D","✌","\uD83D\uDC8B","\uD83D\uDC8C","\uD83D\uDD25","\uD83C\uDF1F","\uD83D\uDCAB","\uD83D\uDCA5","\uD83D\uDE0E",
+            "\uD83D\uDE0B","\uD83D\uDE06");
 
 }
