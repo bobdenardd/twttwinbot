@@ -39,6 +39,9 @@ public class BotPropertiesHelper implements BotSetup {
     private static final String OPT_LOG_STATS                   = "logStats";
     private static final String OPT_SOURCES                     = "sources";
     private static final String OPT_READ_ONLY                   = "readOnly";
+    private static final String OPT_GOO_GL_KEY                  = "gooGlKey";
+    private static final String OPT_BITLY_KEY                   = "bitlyKey";
+    private static final String OPT_YOUTUBE_KEY                 = "youtubeKey";
 
     private static Properties botProperties = new Properties();
 
@@ -137,6 +140,18 @@ public class BotPropertiesHelper implements BotSetup {
 
     public static boolean getReadOnly() {
         return Boolean.valueOf(botProperties.getProperty(OPT_READ_ONLY, String.valueOf(Boolean.FALSE)));
+    }
+
+    public static String getGooGlKey() {
+        return botProperties.getProperty(OPT_GOO_GL_KEY);
+    }
+
+    public static String getBitlyKey() {
+        return botProperties.getProperty(OPT_BITLY_KEY);
+    }
+
+    public static String getYoutubeKey() {
+        return botProperties.getProperty(OPT_YOUTUBE_KEY);
     }
 
 }
