@@ -70,11 +70,11 @@ public class StatsHelper implements BotSetup {
                 for(Map.Entry<String, Integer> entry : sourcesNumbers.entrySet()) {
                     writer.print("Source " + StringUtils.rightPad(entry.getKey(), 12));
                     writer.print("loaded in " + StringUtils.leftPad(sourcesLoadTime.get(entry.getKey()) + StringUtils.EMPTY, 7) + "ms");
-                    writer.println(StringUtils.leftPad(entry.getValue() + StringUtils.EMPTY, 5));
+                    writer.println(StringUtils.leftPad(entry.getValue() + StringUtils.EMPTY, 5) + " sources");
                     totalLoadTime+=sourcesLoadTime.get(entry.getKey());
                     totalNumer+=entry.getValue();
                 }
-                writer.println(" Total load time: " + totalLoadTime + "ms Total number: " + totalNumer + "\n");
+                writer.println("Total load time: " + totalLoadTime + "ms Total number: " + totalNumer + "\n");
                 writer.println("Number of retweets:    " + numberOfRetweets);
                 writer.println("Number of follows:     " + numberOfFollows);
                 writer.println("Number of unfollows:   " + numberOfUnfollows);
