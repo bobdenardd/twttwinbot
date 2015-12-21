@@ -59,17 +59,21 @@ public class TeenTwitterScapper {
         for(String user : USERS) {
             for(int i = 1; i < 5; i++) {
                 Paging paging = new Paging(i, 200);
-                List<Status> statuses = twitter.getUserTimeline(user, paging);
-                for (Status status : statuses) {
-                    String result = processStatus(status);
-                    if (StringUtils.isNotEmpty(result)) {
-                        LOGGER.info(result);
-                        if(!results.contains(result)) {
-                            results.add(result);
-                            writer.println(result);
-                            writer.flush();
+                try {
+                    List<Status> statuses = twitter.getUserTimeline(user, paging);
+                    for (Status status : statuses) {
+                        String result = processStatus(status);
+                        if (StringUtils.isNotEmpty(result)) {
+                            LOGGER.info(result);
+                            if (!results.contains(result)) {
+                                results.add(result);
+                                writer.println(result);
+                                writer.flush();
+                            }
                         }
                     }
+                } catch(Exception e) {
+                    LOGGER.warn("Could not scrapp user " + user + ": " + e.getMessage());
                 }
             }
         }
