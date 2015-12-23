@@ -12,6 +12,7 @@ import com.pject.helpers.StatsHelper;
 import com.pject.persistence.Persistence;
 import com.pject.persistence.Tweets;
 import com.pject.persistence.Users;
+import com.pject.sources.retweets.RetweetsHelper;
 import com.pject.twitter.TweetAnalyzer;
 import com.pject.twitter.TwitterProxy;
 import org.apache.commons.lang3.StringUtils;
@@ -28,6 +29,7 @@ import twitter4j.conf.ConfigurationBuilder;
 
 import java.security.SecureRandom;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Bot - Short description of the class
@@ -75,6 +77,9 @@ public class Bot implements BotSetup {
 
         // Initializing real tweet sources
         SourcesHelper.init();
+
+        // Initializing real retweets
+        RetweetsHelper.init(this.twitter);
 
         // Persisting and optional error dumping
         Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
@@ -250,13 +255,27 @@ public class Bot implements BotSetup {
 
     private void tweetReal(int count) {
         for(int i = 0; i < count; i++) {
-            String message = SourcesHelper.getTweet();
-            if(StringUtils.isNotEmpty(message)) {
-                try {
-                    TwitterProxy.tweet(this.twitter, message);
-                    StatsHelper.addRealTweetCount();
-                } catch(TwitterException|NoRemainingException e) {
-                    LOGGER.error("Could not tweet real status " + message + ": " + LogFormatHelper.formatExceptionMessage(e));
+            // Here needs to implement the probability of retweeting real tweet instead
+            if(new Random().nextInt(5) != 0) {
+                String message = SourcesHelper.getTweet();
+                if (StringUtils.isNotEmpty(message)) {
+                    try {
+                        TwitterProxy.tweet(this.twitter, message);
+                        StatsHelper.addRealTweetCount();
+                    } catch (TwitterException | NoRemainingException e) {
+                        LOGGER.error("Could not tweet real status " + message + ": " + LogFormatHelper.formatExceptionMessage(e));
+                    }
+                }
+            } else {
+                LOGGER.info("Retweeting real tweet");
+                Status toBeRetweeted = RetweetsHelper.getStatusToRetweet();
+                if(toBeRetweeted != null) {
+                    toBeRetweeted = getRootTweet(toBeRetweeted);
+                    try {
+                        TwitterProxy.retweet(twitter, toBeRetweeted);
+                    } catch(Exception e) {
+                        LOGGER.error("Could not retweet real tweet: " + LogFormatHelper.formatExceptionMessage(e));
+                    }
                 }
             }
         }

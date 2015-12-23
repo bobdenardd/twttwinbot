@@ -17,15 +17,15 @@ import java.lang.reflect.Field;
 import java.util.List;
 
 /**
- * TeenTwitterScapper - Short description of the class
+ * TeenTwitterScrapper - Short description of the class
  *
  * @author Camille
  *         Last: 30/09/2015 10:18
  * @version $Id$
  */
-public class TeenTwitterScapper {
+public class TeenTwitterScrapper {
 
-    private static final Logger LOGGER = Logger.getLogger(TeenTwitterScapper.class);
+    private static final Logger LOGGER = Logger.getLogger(TeenTwitterScrapper.class);
 
     private static final String FILE = "conversations.txt";
 

@@ -61,7 +61,7 @@ public class TweetAnalyzer {
         return Collections.emptyList();
     }
 
-    private static String singleLine(String tweet) {
+    public static String singleLine(String tweet) {
         return StringUtils.isNotEmpty(tweet) ? tweet.replace("\n", SPACE).replace("\r", SPACE) : StringUtils.EMPTY;
     }
 
